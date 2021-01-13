@@ -13,6 +13,7 @@ recipesController.parseRecipe = (req, res, next) => {
       'x-rapidapi-host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
     }
   };
+  console.log(req.body.url);
   axios.request(options)
     .then((response) => {
       res.locals.recipe = response.data;

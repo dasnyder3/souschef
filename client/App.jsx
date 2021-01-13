@@ -1,8 +1,13 @@
 import React, {Component} from 'react';
+import MainContainer from './Containers/MainContainer.jsx';
 
 class App extends Component {
   render() {
-    return <p>Hello World!</p>
+    return (
+      <div>
+        <MainContainer />
+      </div>
+    )
   }
 }
 
