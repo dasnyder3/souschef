@@ -1,0 +1,10 @@
+img {
+  width: 200px;
+  margin: 5px 5px 5px 5px;
+}
+
+.recipe-card {
+  display: flex;
+  margin: 10px 0px;
+  background-color: lightgrey
+}

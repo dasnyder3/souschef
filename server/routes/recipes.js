@@ -6,8 +6,14 @@ const recipesController = require('../controllers/recipesController');
 const router = express.Router();
 
 // takes in a recipe url, extracts the ingredients and instructios, returns to requester
-router.post('/parse', 
+router.post('/parse',
+  recipesController.findRecipe,
   recipesController.parseRecipe,
-  (req, res) => res.status(200).json({...res.locals.recipe}));
+  recipesController.saveRecipe,
+  (req, res) => res.status(200).json({ ...res.locals.recipe }));
+
+router.get('/',
+  recipesController.getRecipes,
+  (req, res) => res.status(200).json([...res.locals.recipes]));
 
 module.exports = router;

@@ -2,8 +2,8 @@ import React from 'react';
 
 const AddRecipe = ({newRecipe, updateRecipe, parseRecipe}) => (
   <div>
-    <h3>Add a Recipe!</h3>
-    <input type="text" defaultValue={newRecipe} onChange={(event) => updateRecipe(event.target.value)}></input>
+    <h2>Add a Recipe!</h2>
+    <input type="text" value={newRecipe} onChange={(event) => updateRecipe(event.target.value)}></input>
     <button onClick={parseRecipe}>Submit</button>
   </div>
 )
