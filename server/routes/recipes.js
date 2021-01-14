@@ -9,10 +9,17 @@ const router = express.Router();
 router.post('/parse',
   recipesController.findRecipe,
   recipesController.parseRecipe,
+  recipesController.addRecipe,
   recipesController.saveRecipe,
   (req, res) => res.status(200).json({ ...res.locals.recipe }));
 
-router.get('/',
+router.post('/cooked/:userId',
+  recipesController.markCooked,
+  (req, res) => res.sendStatus(200)
+)
+
+router.get('/:userId',
+  recipesController.getUserRecipes,
   recipesController.getRecipes,
   (req, res) => res.status(200).json([...res.locals.recipes]));
 

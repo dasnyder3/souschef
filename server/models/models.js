@@ -132,6 +132,33 @@ const recipeSchema = new Schema({
 
 const Recipes = mongoose.model('recipe', recipeSchema);
 
+const savedRecipeSchema = new Schema({
+  userId: {
+    type: String,
+    required: true
+  },
+  recipes: [{
+    recipeId: {
+      type: Schema.Types.ObjectId,
+      ref: 'recipe'
+    },
+    cooked: {
+      type: Boolean,
+      default: false
+    },
+    notes: [{
+      date: {
+        type: Date,
+        default: Date.now
+      },
+      note: String
+    }]
+  }]
+});
+
+const SavedRecipes = mongoose.model('savedRecipe', savedRecipeSchema);
+
 module.exports = {
   Recipes,
+  SavedRecipes,
 }

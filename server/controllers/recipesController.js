@@ -5,8 +5,7 @@ const models = require('../models/models');
 const recipesController = {}; 
 
 recipesController.getRecipes = (req, res, next) => {
-  console.log('in getRecipes');
-  models.Recipes.find({})
+  models.Recipes.find({ _id: { $in: res.locals.recipeIds }})
     .exec()
     .then((data) => {
       res.locals.recipes = data;
@@ -19,7 +18,6 @@ recipesController.getRecipes = (req, res, next) => {
 }
 
 recipesController.findRecipe = (req, res, next) => {
-  console.log('in findRecipe');
   models.Recipes.findOne({ url: req.body.url })
     .exec()
     .then((data) => {
@@ -34,7 +32,6 @@ recipesController.findRecipe = (req, res, next) => {
 
 recipesController.parseRecipe = (req, res, next) => {
   if (!res.locals.recipe) {
-    console.log('making api request');
     const options = {
       method: 'GET',
       url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/extract',
@@ -60,18 +57,71 @@ recipesController.parseRecipe = (req, res, next) => {
   }
 }
 
-recipesController.saveRecipe = (req, res, next) => {
+recipesController.addRecipe = (req, res, next) => {
   models.Recipes.create({
     name: res.locals.recipe.title,
     url: res.locals.recipe.sourceUrl,
     recipe: res.locals.recipe,
   }, (err, data) => {
     if (err) return next({
-      log: `recipesController.saveRecipe: ERROR: ${err}`,
-      message: { err: 'recipesController.saveRecipe: ERROR: Check server logs for details' }
+      log: `recipesController.addRecipe: ERROR: ${err}`,
+      message: { err: 'recipesController.addRecipe: ERROR: Check server logs for details' }
     })
+    res.locals.recipeId = data._id;
     return next();
   });
+}
+
+recipesController.saveRecipe = (req, res, next) => {
+  models.SavedRecipes.findOneAndUpdate(
+    {userId: 'user1'},
+    {$push: { recipes: { recipeId: res.locals.recipeId }}},
+    {
+      upsert: true,
+      useFindAndModify: false,
+    },
+    (err, data) => {
+      if (err) return next({
+        log: `recipesController.saveRecipe: ERROR: ${err}`,
+        message: { err: 'recipesController.saveRecipe: ERROR: Check server logs for details' }
+      })
+      return next();
+    }
+  )
+}
+
+recipesController.getUserRecipes = (req, res, next) => {
+  models.SavedRecipes.findOne({
+    userId: req.params.userId
+  }).exec()
+    .then((data) => {
+      res.locals.recipeIds = data.recipes.map((ele) => ele.recipeId);
+      return next();
+    })
+    .catch((err) => next({
+      log: `recipesController.getUserRecipes: ERROR: ${err}`,
+      message: { err: 'recipesController.getUserRecipes: ERROR: Check server logs for details' }
+    }));
+}
+
+recipesController.markCooked = (req, res, next) => {
+  // console.log('in markCompleted')
+  models.SavedRecipes.updateOne(
+    {
+      userId: req.params.userId,
+      "recipes.recipeId": req.body.recipeId
+    },
+    {
+      $set: {"recipes.$.cooked": true}
+    },
+    (err, data) => {
+      if (err) return next({
+        log: `recipesController.markCooked: ERROR: ${err}`,
+        message: { err: 'recipesController.markCooked: ERROR: Check server logs for details' }
+      })
+      return next();
+    }
+  )
 }
 
 module.exports = recipesController;
