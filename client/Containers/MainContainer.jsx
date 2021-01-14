@@ -16,6 +16,8 @@ class MainContainer extends Component {
     this.openRecipe = this.openRecipe.bind(this);
     this.closeRecipe = this.closeRecipe.bind(this);
     this.markCooked = this.markCooked.bind(this);
+    this.markNotCooked = this.markNotCooked.bind(this);
+    this.removeRecipe = this.removeRecipe.bind(this);
   }
 
   componentDidMount() {
@@ -54,8 +56,32 @@ class MainContainer extends Component {
       .catch((err) => console.log(err));
   }
 
+  markNotCooked(recipeId) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipeId: recipeId })
+    };
+    fetch('recipes/notcooked/user1', requestOptions)
+      .then(() => this.getRecipes())
+      .catch((err) => console.log(err));
+  }
+
+  removeRecipe(recipeId) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipeId: recipeId })
+    };
+    fetch('recipes/delete/user1', requestOptions)
+      .then(() => this.getRecipes())
+      .catch((err) => console.log(err));
+  }
+
   openRecipe(event, recipeId) {
-    if (event.target.className !== 'cooked-btn' && event.target.className !== 'cooked-btn filled') {
+    if (event.target.className !== 'cooked-btn' 
+      && event.target.className !== 'cooked-btn filled'
+      && event.target.className !== 'remove-btn') {
       const recipeToShow = this.state.recipes.filter((recipe) => recipe.details._id === recipeId)[0];
       console.log(recipeToShow);
       this.setState({ displayedRecipe: recipeToShow });
@@ -82,6 +108,8 @@ class MainContainer extends Component {
           recipes={this.state.recipes}
           openRecipe={this.openRecipe}
           markCooked={this.markCooked}
+          markNotCooked={this.markNotCooked}
+          removeRecipe={this.removeRecipe}
         />
         {this.state.displayedRecipe ? 
           <RecipePopup 

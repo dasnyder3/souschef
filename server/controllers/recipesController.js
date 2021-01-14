@@ -116,6 +116,25 @@ recipesController.getUserRecipes = (req, res, next) => {
     }));
 }
 
+recipesController.deleteRecipe = (req, res, next) => {
+  console.log('recipeId',req.body.recipeId);
+  models.SavedRecipes.updateOne(
+    {
+      userId: req.params.userId, 
+    },
+    {
+      $pull: { "recipes": { recipeId: req.body.recipeId } }
+    },
+    (err, data) => {
+      if (err) return next({
+        log: `recipesController.deleteRecipe: ERROR: ${err}`,
+        message: { err: 'recipesController.deleteRecipe: ERROR: Check server logs for details' }
+      })
+      return next();
+    }
+  )
+}
+
 recipesController.markCooked = (req, res, next) => {
   // console.log('in markCompleted')
   models.SavedRecipes.updateOne(
@@ -130,6 +149,26 @@ recipesController.markCooked = (req, res, next) => {
       if (err) return next({
         log: `recipesController.markCooked: ERROR: ${err}`,
         message: { err: 'recipesController.markCooked: ERROR: Check server logs for details' }
+      })
+      return next();
+    }
+  )
+}
+
+recipesController.markNotCooked = (req, res, next) => {
+  // console.log('in markCompleted')
+  models.SavedRecipes.updateOne(
+    {
+      userId: req.params.userId,
+      "recipes.recipeId": req.body.recipeId
+    },
+    {
+      $set: { "recipes.$.cooked": false }
+    },
+    (err, data) => {
+      if (err) return next({
+        log: `recipesController.markNotCooked: ERROR: ${err}`,
+        message: { err: 'recipesController.markNotCooked: ERROR: Check server logs for details' }
       })
       return next();
     }

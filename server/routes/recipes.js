@@ -18,6 +18,16 @@ router.post('/cooked/:userId',
   (req, res) => res.sendStatus(200)
 )
 
+router.post('/notcooked/:userId',
+  recipesController.markNotCooked,
+  (req, res) => res.sendStatus(200)
+)
+
+router.post('/delete/:userId',
+  recipesController.deleteRecipe,
+  (req, res) => res.sendStatus(200)
+)
+
 router.get('/:userId',
   recipesController.getUserRecipes,
   recipesController.getRecipes,
