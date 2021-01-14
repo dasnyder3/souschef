@@ -48,8 +48,12 @@ class MainContainer extends Component {
     this.setState({ displayedRecipe: recipeToShow });
   }
 
-  closeRecipe(recipeId) {
-    this.setState({ displayedRecipe: null });
+  closeRecipe(event) {
+    // will check if the click came from the popup itself
+      // if not, close the popup; otherwise, leave it open
+    if (!event.target.closest('.recipe-popup-inner')) {
+      this.setState({ displayedRecipe: null });
+    }
   }
 
   render() {
@@ -65,7 +69,10 @@ class MainContainer extends Component {
           openRecipe={this.openRecipe}
         />
         {this.state.displayedRecipe ? 
-          <RecipePopup recipe={this.state.displayedRecipe.recipe}/>
+          <RecipePopup 
+            recipe={this.state.displayedRecipe.recipe}
+            closeRecipe={this.closeRecipe}
+          />
         : null}
       </div>
     )

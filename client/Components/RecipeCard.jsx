@@ -6,7 +6,10 @@ const RecipeCard = ({recipe, openRecipe}) => {
       <img src={recipe.recipe.image}></img>
       <div>
         <h3>{recipe.name}</h3>
-        <p>Ready in {recipe.recipe.readyInMinutes} minutes</p>
+        {(recipe.recipe.readyInMinutes) ? 
+          <p>Ready in {recipe.recipe.readyInMinutes} minutes</p>
+          : <p>Time estimate unavailable</p>
+        }
       </div>
     </article>
   )
