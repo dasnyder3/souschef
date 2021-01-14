@@ -4,6 +4,7 @@ const app = express();
 
 // require routers
 const recipesRouter = require('./routes/recipes');
+// const loginRouter = require('./routes/login')
 
 // handle parsing request body
 app.use(express.json());
@@ -12,7 +13,10 @@ app.use('/build', express.static(path.join(__dirname, '../build')));
 
 app.use('/recipes', recipesRouter);
 
+// app.use('/login', loginRouter);
+
 app.get('/', (req, res) => {
+  console.log('/ route')
   return res.status(200).sendFile(path.join(__dirname, '../index.html'));
 });
 

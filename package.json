@@ -22,9 +22,12 @@
   "dependencies": {
     "axios": "^0.21.1",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "mongoose": "^5.11.11",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -35,5 +38,14 @@
     "webpack": "^4.46.0",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.11.1"
+  },
+  "browser": {
+    "crypto": false,
+    "fs": false,
+    "path": false,
+    "os": false,
+    "net": false,
+    "stream": false,
+    "tls": false
   }
 }

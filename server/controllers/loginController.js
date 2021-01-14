@@ -1,1 +1,3 @@
-loginController = {};
+const loginController = {};
+
+module.exports = loginController;

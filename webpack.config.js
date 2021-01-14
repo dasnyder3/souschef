@@ -24,7 +24,11 @@ module.exports = {
   devServer: {
     publicPath: '/build/',
     proxy: {
-      '/recipes': 'http://localhost:3000'
+      '/recipes': 'http://localhost:3000',
+      // '/login': 'http://localhost:3000'
     }
   },
+  node: { fs: 'empty' },
+    // devtool: options.devtool,
+  target: 'web', // Make web variables accessible to webpack, e.g. window
 }
