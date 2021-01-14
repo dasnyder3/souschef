@@ -3,7 +3,6 @@ import Ingredient from './Ingredient.jsx';
 import Step from './Step.jsx';
 
 const RecipePopup = ({ recipe, closeRecipe }) => {
-  console.log('RecipePopup', recipe);
   if (!recipe.extendedIngredients || !recipe.analyzedInstructions[0]) {
     return (
       <article className="recipe-popup" onClick={(event) => closeRecipe(event)}>

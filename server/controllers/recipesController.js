@@ -5,10 +5,17 @@ const models = require('../models/models');
 const recipesController = {}; 
 
 recipesController.getRecipes = (req, res, next) => {
-  models.Recipes.find({ _id: { $in: res.locals.recipeIds }})
+  const recipeIds = res.locals.userRecipes.map((ele) => ele.recipeId)
+  models.Recipes.find({ _id: { $in: recipeIds }})
     .exec()
     .then((data) => {
-      res.locals.recipes = data;
+      const newUserRecipes = res.locals.userRecipes.map((userRecipe) => {
+        const newUserRecipe = userRecipe.toObject();
+        const recipeDetails = data.filter((ele) => ele._id.toString() === userRecipe.recipeId.toString())[0];
+        newUserRecipe.details = recipeDetails;
+        return newUserRecipe;
+      })
+      res.locals.userRecipes = newUserRecipes;
       return next();
     })
     .catch((err) => next({
@@ -21,8 +28,8 @@ recipesController.findRecipe = (req, res, next) => {
   models.Recipes.findOne({ url: req.body.url })
     .exec()
     .then((data) => {
-      if (data) res.status(200).json({ ...data.recipe.toObject() });
-      else return next();
+      if (data) res.locals.recipeId = data._id //res.status(200).json({ ...data.recipe.toObject() });
+      return next();
     })
     .catch((err) => next({
       log: `recipesController.findRecipe: ERROR: ${err}`,
@@ -31,7 +38,7 @@ recipesController.findRecipe = (req, res, next) => {
 }
 
 recipesController.parseRecipe = (req, res, next) => {
-  if (!res.locals.recipe) {
+  if (!res.locals.recipeId) {
     const options = {
       method: 'GET',
       url: 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/extract',
@@ -58,18 +65,22 @@ recipesController.parseRecipe = (req, res, next) => {
 }
 
 recipesController.addRecipe = (req, res, next) => {
-  models.Recipes.create({
-    name: res.locals.recipe.title,
-    url: res.locals.recipe.sourceUrl,
-    recipe: res.locals.recipe,
-  }, (err, data) => {
-    if (err) return next({
-      log: `recipesController.addRecipe: ERROR: ${err}`,
-      message: { err: 'recipesController.addRecipe: ERROR: Check server logs for details' }
-    })
-    res.locals.recipeId = data._id;
+  if (!res.locals.recipeId) {
+    models.Recipes.create({
+      name: res.locals.recipe.title,
+      url: res.locals.recipe.sourceUrl,
+      recipe: res.locals.recipe,
+    }, (err, data) => {
+      if (err) return next({
+        log: `recipesController.addRecipe: ERROR: ${err}`,
+        message: { err: 'recipesController.addRecipe: ERROR: Check server logs for details' }
+      })
+      res.locals.recipeId = data._id;
+      return next();
+    });
+  } else {
     return next();
-  });
+  }
 }
 
 recipesController.saveRecipe = (req, res, next) => {
@@ -95,7 +106,8 @@ recipesController.getUserRecipes = (req, res, next) => {
     userId: req.params.userId
   }).exec()
     .then((data) => {
-      res.locals.recipeIds = data.recipes.map((ele) => ele.recipeId);
+      res.locals.userRecipes = data.recipes;
+      // res.locals.recipeIds = data.recipes.map((ele) => ele.recipeId);
       return next();
     })
     .catch((err) => next({

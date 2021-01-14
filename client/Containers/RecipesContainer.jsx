@@ -2,10 +2,16 @@ import React, { Component } from 'react';
 import RecipeCard from '../Components/RecipeCard.jsx';
 
 
-const RecipesContainer = ({ recipes, openRecipe }) => {
-  console.log(Array.isArray(recipes));
+const RecipesContainer = ({ recipes, openRecipe, markCooked }) => {
   const recipeCards = recipes.map((recipe, i) => {
-    return <RecipeCard key={`recipe-${i}`} recipe={recipe} openRecipe={openRecipe}/>
+    return (
+      <RecipeCard 
+        key={`recipe-${i}`} 
+        recipe={recipe.details} 
+        cooked={recipe.cooked}
+        openRecipe={openRecipe}
+        markCooked={markCooked}
+      />)
   })
   return <div>{recipeCards}</div>
 }

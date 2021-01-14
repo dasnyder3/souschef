@@ -21,6 +21,6 @@ router.post('/cooked/:userId',
 router.get('/:userId',
   recipesController.getUserRecipes,
   recipesController.getRecipes,
-  (req, res) => res.status(200).json([...res.locals.recipes]));
+  (req, res) => res.status(200).json([...res.locals.userRecipes]));
 
 module.exports = router;

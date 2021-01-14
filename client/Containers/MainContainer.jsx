@@ -15,6 +15,7 @@ class MainContainer extends Component {
     this.parseRecipe = this.parseRecipe.bind(this);
     this.openRecipe = this.openRecipe.bind(this);
     this.closeRecipe = this.closeRecipe.bind(this);
+    this.markCooked = this.markCooked.bind(this);
   }
 
   componentDidMount() {
@@ -22,13 +23,12 @@ class MainContainer extends Component {
   }
 
   getRecipes() {
-    fetch('/recipes')
+    fetch('/recipes/user1')
       .then(data => data.json())
       .then(data => this.setState({ recipes: [...data], newRecipe: '' }));
   }
 
   updateRecipe(text) {
-    console.log('event.target.value', text);
     this.setState({ newRecipe: text });
   }
 
@@ -39,13 +39,27 @@ class MainContainer extends Component {
       body: JSON.stringify({ url: this.state.newRecipe })
     };
     fetch('recipes/parse', requestOptions)
-      .then(() => this.getRecipes());
+      .then(() => this.getRecipes())
+      .catch((err) => console.log(err));
   }
 
-  openRecipe(recipeId) {
-    const recipeToShow = this.state.recipes.filter((recipe) => recipe._id === recipeId)[0];
-    console.log('recipeToShow', recipeToShow);
-    this.setState({ displayedRecipe: recipeToShow });
+  markCooked(recipeId) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipeId: recipeId })
+    };
+    fetch('recipes/cooked/user1', requestOptions)
+      .then(() => this.getRecipes())
+      .catch((err) => console.log(err));
+  }
+
+  openRecipe(event, recipeId) {
+    if (event.target.className !== 'cooked-btn' && event.target.className !== 'cooked-btn filled') {
+      const recipeToShow = this.state.recipes.filter((recipe) => recipe.details._id === recipeId)[0];
+      console.log(recipeToShow);
+      this.setState({ displayedRecipe: recipeToShow });
+    }
   }
 
   closeRecipe(event) {
@@ -67,10 +81,11 @@ class MainContainer extends Component {
         <RecipesContainer 
           recipes={this.state.recipes}
           openRecipe={this.openRecipe}
+          markCooked={this.markCooked}
         />
         {this.state.displayedRecipe ? 
           <RecipePopup 
-            recipe={this.state.displayedRecipe.recipe}
+            recipe={this.state.displayedRecipe.details.recipe}
             closeRecipe={this.closeRecipe}
           />
         : null}

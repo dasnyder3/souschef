@@ -1,8 +1,8 @@
 import React from 'react';
 
-const RecipeCard = ({recipe, openRecipe}) => {
+const RecipeCard = ({recipe, cooked, openRecipe, markCooked}) => {
   return (
-    <article className="recipe-card" id={recipe._id} onClick={() => openRecipe(recipe._id)}>
+    <article className="recipe-card" id={recipe._id} onClick={(event) => openRecipe(event, recipe._id)}>
       <img src={recipe.recipe.image}></img>
       <div>
         <h3>{recipe.name}</h3>
@@ -10,6 +10,8 @@ const RecipeCard = ({recipe, openRecipe}) => {
           <p>Ready in {recipe.recipe.readyInMinutes} minutes</p>
           : <p>Time estimate unavailable</p>
         }
+        {!cooked ? <button onClick={() => markCooked(recipe._id)} className="cooked-btn">Made it!</button>
+          : <button className="cooked-btn filled">Cooked</button>}
       </div>
     </article>
   )

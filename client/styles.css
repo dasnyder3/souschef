@@ -35,3 +35,7 @@ img {
 .recipe-popup p {
   font-size: 0.75rem;
 }
+
+.filled {
+  background: black;
+}
