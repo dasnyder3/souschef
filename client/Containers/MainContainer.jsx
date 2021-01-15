@@ -99,11 +99,14 @@ class MainContainer extends Component {
   render() {
     return (
       <div>
+        <header class="header-container">
+          <h1>Sous-chef</h1>
         <AddRecipe
           newRecipe={this.state.newRecipe}
           updateRecipe={this.updateRecipe}
           parseRecipe={this.parseRecipe}
         />
+        </header>
         <RecipesContainer 
           recipes={this.state.recipes}
           openRecipe={this.openRecipe}

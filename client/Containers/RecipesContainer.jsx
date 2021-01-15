@@ -15,7 +15,7 @@ const RecipesContainer = ({ recipes, openRecipe, markCooked, markNotCooked, remo
         removeRecipe={removeRecipe}
       />)
   })
-  return <div>{recipeCards}</div>
+  return <div className="recipes-container">{recipeCards}</div>
 }
 
 export default RecipesContainer;
