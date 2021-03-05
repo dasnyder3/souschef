@@ -9,7 +9,6 @@
     "build": "NODE_ENV=production webpack",
     "dev": "NODE_ENV=development nodemon server/server.js & webpack-dev-server --open"
   },
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dasnyder3/solo-project.git"
@@ -32,15 +31,11 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.3",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
-    "jest": "^26.6.3",
     "nodemon": "^2.0.7",
     "sass-loader": "^10.1.1",
     "style-loader": "^2.0.0",
-    "test-data-bot": "^0.8.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.11.1"
