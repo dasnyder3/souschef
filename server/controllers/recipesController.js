@@ -38,6 +38,7 @@ recipesController.findRecipe = (req, res, next) => {
 }
 
 recipesController.parseRecipe = (req, res, next) => {
+  console.log('in parseRecipe')
   if (!res.locals.recipeId) {
     const options = {
       method: 'GET',
@@ -51,6 +52,7 @@ recipesController.parseRecipe = (req, res, next) => {
     axios.request(options)
       .then((response) => {
         res.locals.recipe = response.data;
+        console.log('response.data: ',response.data);
         return next();
       })
       .catch((err) => {

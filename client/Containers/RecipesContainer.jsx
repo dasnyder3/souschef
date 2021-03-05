@@ -5,15 +5,18 @@ import RecipeCard from '../Components/RecipeCard.jsx';
 const RecipesContainer = ({ recipes, openRecipe, markCooked, markNotCooked, removeRecipe }) => {
   const recipeCards = recipes.map((recipe, i) => {
     return (
-      <RecipeCard 
-        key={`recipe-${i}`} 
-        recipe={recipe.details} 
-        cooked={recipe.cooked}
-        openRecipe={openRecipe}
-        markCooked={markCooked}
-        markNotCooked={markNotCooked}
-        removeRecipe={removeRecipe}
-      />)
+      <div className='container'>
+        <RecipeCard
+          key={`recipe-${i}`}
+          recipe={recipe.details}
+          cooked={recipe.cooked}
+          openRecipe={openRecipe}
+          markCooked={markCooked}
+          markNotCooked={markNotCooked}
+          removeRecipe={removeRecipe}
+        />
+      </div>
+      )
   })
   return <div className="recipes-container">{recipeCards}</div>
 }
