@@ -1,5 +1,5 @@
 const axios = require("axios").default;
-const FOOD_API_KEY = require('../keys');
+const { FOOD_API_KEY } = require('../keys');
 const models = require('../models/models');
 
 const recipesController = {}; 
@@ -49,13 +49,15 @@ recipesController.parseRecipe = (req, res, next) => {
         'x-rapidapi-host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
       }
     };
+    // console.log('options: ', options)
     axios.request(options)
       .then((response) => {
         res.locals.recipe = response.data;
-        console.log('response.data: ',response.data);
+        // console.log('response.data: ',response.data);
         return next();
       })
       .catch((err) => {
+        console.log('err: ', err)
         return next({
           log: `recipesController.parseRecipe: ERROR: ${err}`,
           message: { err: 'recipesController.parseRecipe: ERROR: Check server logs for details' }
