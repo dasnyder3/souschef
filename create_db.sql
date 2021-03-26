@@ -24,7 +24,7 @@ CREATE TABLE public.users (
 
 CREATE TABLE public.recipes (
   "_id" serial NOT NULL,
-  "mongo_id" varchar(30) NOT NULL,
+  "mongo_id" varchar(30) NOT NULL UNIQUE,
   CONSTRAINT "recipes_pk" PRIMARY KEY ("_id")
 );
 

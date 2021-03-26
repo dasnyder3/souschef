@@ -1,6 +1,7 @@
 const axios = require('axios').default;
 const { FOOD_API_KEY } = require('../keys');
 const models = require('../models/models');
+const db = require('../models/pgModel');
 
 const recipesController = {};
 
@@ -35,8 +36,13 @@ recipesController.findRecipe = (req, res, next) => {
   models.Recipes.findOne({ url: req.body.url })
     .exec()
     .then((data) => {
-      if (data) res.locals.recipeId = data._id; //res.status(200).json({ ...data.recipe.toObject() });
-      return next();
+      if (data) {
+        res.locals.recipeId = data._id; //res.status(200).json({ ...data.recipe.toObject() });
+        res.redirect('/recipes/saveExisting');
+      } else {
+        res.redirect('/recipes/addNew');
+      }
+      // return next();
     })
     .catch((err) =>
       next({
@@ -108,6 +114,25 @@ recipesController.addRecipe = (req, res, next) => {
   } else {
     return next();
   }
+};
+
+recipesController.addRecipeToPostgres = (req, res, next) => {
+  const query = `
+    INSERT INTO recipes (mongo_id)
+    VALUES ($1)
+    `;
+  const params = [res.locals.recipeId];
+  db.query(query, params)
+    .then(() => next())
+    .catch((err) => {
+      return next({
+        log: `recipesController.addRecipeToPostgres: ERROR: ${err}`,
+        message: {
+          err:
+            'recipesController.addRecipeToPostgress: ERROR: Check server logs for details',
+        },
+      });
+    });
 };
 
 recipesController.saveRecipe = (req, res, next) => {
