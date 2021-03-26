@@ -4,7 +4,7 @@ module.exports = {
   entry: '/client/index.js',
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   mode: process.env.NODE_ENV,
   module: {
@@ -15,9 +15,9 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
-          }
-        }
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+          },
+        },
       },
       {
         test: /.(css|scss)$/,
@@ -33,17 +33,22 @@ module.exports = {
             loader: 'css-loader',
             options: {
               modules: true,
-              localIdentName: '[name]__[local]___[hash:base64:5]'
+              localIdentName: '[name]__[local]___[hash:base64:5]',
             },
           },
-          'sass-loader'],
+          'sass-loader',
+        ],
       },
-    ]
+    ],
   },
   devServer: {
     publicPath: '/build/',
     proxy: {
-      '/recipes': 'http://localhost:3000'
-    }
+      '/recipes': 'http://localhost:3000',
+      '/auth/google': 'http://localhost:3000',
+      '/auth/google/callback': 'http://localhost:3000',
+      '/login': 'http://localhost:3000',
+      '/': 'http://localhost:3000',
+    },
   },
-}
+};

@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import AddRecipe from '../Components/AddRecipe.jsx'
+import React, { Component } from 'react';
+import AddRecipe from '../Components/AddRecipe.jsx';
 import RecipePopup from '../Components/RecipePopup.jsx';
 import RecipesContainer from './RecipesContainer.jsx';
 
@@ -26,8 +26,8 @@ class MainContainer extends Component {
 
   getRecipes() {
     fetch('/recipes/user1')
-      .then(data => data.json())
-      .then(data => this.setState({ recipes: [...data], newRecipe: '' }));
+      .then((data) => data.json())
+      .then((data) => this.setState({ recipes: [...data], newRecipe: '' }));
   }
 
   updateRecipe(text) {
@@ -36,9 +36,9 @@ class MainContainer extends Component {
 
   parseRecipe(event) {
     const requestOptions = {
-      method: 'POST', 
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: this.state.newRecipe })
+      body: JSON.stringify({ url: this.state.newRecipe }),
     };
     fetch('recipes/parse', requestOptions)
       .then(() => this.getRecipes())
@@ -49,7 +49,7 @@ class MainContainer extends Component {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipeId: recipeId })
+      body: JSON.stringify({ recipeId: recipeId }),
     };
     fetch('recipes/cooked/user1', requestOptions)
       .then(() => this.getRecipes())
@@ -60,7 +60,7 @@ class MainContainer extends Component {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipeId: recipeId })
+      body: JSON.stringify({ recipeId: recipeId }),
     };
     fetch('recipes/notcooked/user1', requestOptions)
       .then(() => this.getRecipes())
@@ -71,7 +71,7 @@ class MainContainer extends Component {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipeId: recipeId })
+      body: JSON.stringify({ recipeId: recipeId }),
     };
     fetch('recipes/delete/user1', requestOptions)
       .then(() => this.getRecipes())
@@ -79,10 +79,14 @@ class MainContainer extends Component {
   }
 
   openRecipe(event, recipeId) {
-    if (event.target.className !== 'cooked-btn' 
-      && event.target.className !== 'cooked-btn filled'
-      && event.target.className !== 'remove-btn') {
-      const recipeToShow = this.state.recipes.filter((recipe) => recipe.details._id === recipeId)[0];
+    if (
+      event.target.className !== 'cooked-btn' &&
+      event.target.className !== 'cooked-btn filled' &&
+      event.target.className !== 'remove-btn'
+    ) {
+      const recipeToShow = this.state.recipes.filter(
+        (recipe) => recipe.details._id === recipeId
+      )[0];
       console.log(recipeToShow);
       this.setState({ displayedRecipe: recipeToShow });
     }
@@ -90,7 +94,7 @@ class MainContainer extends Component {
 
   closeRecipe(event) {
     // will check if the click came from the popup itself
-      // if not, close the popup; otherwise, leave it open
+    // if not, close the popup; otherwise, leave it open
     if (!event.target.closest('.recipe-popup-inner')) {
       this.setState({ displayedRecipe: null });
     }
@@ -99,29 +103,29 @@ class MainContainer extends Component {
   render() {
     return (
       <div>
-        <header class="header-container">
+        <header className='header-container'>
           <h1>Sous-chef</h1>
-        <AddRecipe
-          newRecipe={this.state.newRecipe}
-          updateRecipe={this.updateRecipe}
-          parseRecipe={this.parseRecipe}
-        />
+          <AddRecipe
+            newRecipe={this.state.newRecipe}
+            updateRecipe={this.updateRecipe}
+            parseRecipe={this.parseRecipe}
+          />
         </header>
-        <RecipesContainer 
+        <RecipesContainer
           recipes={this.state.recipes}
           openRecipe={this.openRecipe}
           markCooked={this.markCooked}
           markNotCooked={this.markNotCooked}
           removeRecipe={this.removeRecipe}
         />
-        {this.state.displayedRecipe ? 
-          <RecipePopup 
+        {this.state.displayedRecipe ? (
+          <RecipePopup
             recipe={this.state.displayedRecipe.details.recipe}
             closeRecipe={this.closeRecipe}
           />
-        : null}
+        ) : null}
       </div>
-    )
+    );
   }
 }
 
