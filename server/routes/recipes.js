@@ -20,7 +20,6 @@ router.get(
   '/saveExisting',
   recipesController.addRecipeToPostgres,
   recipesController.saveRecipe,
-  recipesController.saveRecipe,
   (req, res) => res.status(200).json({ ...res.locals.recipe })
 );
 
