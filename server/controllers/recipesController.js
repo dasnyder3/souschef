@@ -33,14 +33,17 @@ recipesController.getRecipes = (req, res, next) => {
 };
 
 recipesController.findRecipe = (req, res, next) => {
+  console.log('req.body.url: ', req.body.url);
   models.Recipes.findOne({ url: req.body.url })
     .exec()
     .then((data) => {
       if (data) {
-        res.locals.recipeId = data._id; //res.status(200).json({ ...data.recipe.toObject() });
-        res.redirect('/recipes/saveExisting');
+        // res.locals.recipeId = data._id; //res.status(200).json({ ...data.recipe.toObject() });
+        console.log('redirecting to saveExisting');
+        res.redirect(`/recipes/saveExisting?id=${data._id}`);
       } else {
-        res.redirect('/recipes/addNew');
+        console.log('redirecting to addNew');
+        res.redirect(`/recipes/addNew?url=${req.body.url}`);
       }
       // return next();
     })
@@ -57,12 +60,13 @@ recipesController.findRecipe = (req, res, next) => {
 
 recipesController.parseRecipe = (req, res, next) => {
   console.log('in parseRecipe');
+  console.log('req.params.url: ', req.query.url);
   if (!res.locals.recipeId) {
     const options = {
       method: 'GET',
       url:
         'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/extract',
-      params: { url: req.body.url },
+      params: { url: req.query.url },
       headers: {
         'x-rapidapi-key': FOOD_API_KEY,
         'x-rapidapi-host':
@@ -91,39 +95,43 @@ recipesController.parseRecipe = (req, res, next) => {
 };
 
 recipesController.addRecipe = (req, res, next) => {
-  if (!res.locals.recipeId) {
-    models.Recipes.create(
-      {
-        name: res.locals.recipe.title,
-        url: res.locals.recipe.sourceUrl,
-        recipe: res.locals.recipe,
-      },
-      (err, data) => {
-        if (err)
-          return next({
-            log: `recipesController.addRecipe: ERROR: ${err}`,
-            message: {
-              err:
-                'recipesController.addRecipe: ERROR: Check server logs for details',
-            },
-          });
-        res.locals.recipeId = data._id;
-        return next();
-      }
-    );
-  } else {
-    return next();
-  }
+  // if (!res.locals.recipeId) {
+  models.Recipes.create(
+    {
+      name: res.locals.recipe.title,
+      url: res.locals.recipe.sourceUrl,
+      recipe: res.locals.recipe,
+    },
+    (err, data) => {
+      if (err)
+        return next({
+          log: `recipesController.addRecipe: ERROR: ${err}`,
+          message: {
+            err:
+              'recipesController.addRecipe: ERROR: Check server logs for details',
+          },
+        });
+      res.locals.recipeId = data._id;
+      return next();
+    }
+  );
+  // } else {
+  //   return next();
+  // }
 };
 
 recipesController.addRecipeToPostgres = (req, res, next) => {
   const query = `
     INSERT INTO recipes (mongo_id)
     VALUES ($1)
+    RETURNING *
     `;
-  const params = [res.locals.recipeId];
+  const params = [res.locals.recipeId || req.query.id];
   db.query(query, params)
-    .then(() => next())
+    .then((data) => {
+      console.log('data: ', data);
+      res.locals.recipeId = data.rows[0].mongo_id;
+    })
     .catch((err) => {
       return next({
         log: `recipesController.addRecipeToPostgres: ERROR: ${err}`,
@@ -136,6 +144,7 @@ recipesController.addRecipeToPostgres = (req, res, next) => {
 };
 
 recipesController.saveRecipe = (req, res, next) => {
+  // const recipeId = res.local.recipeId || req.
   models.SavedRecipes.findOneAndUpdate(
     { userId: 'user1' },
     { $push: { recipes: { recipeId: res.locals.recipeId } } },
