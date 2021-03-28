@@ -1,6 +1,7 @@
 const axios = require('axios').default;
 const { FOOD_API_KEY } = require('../keys');
 const models = require('../models/models');
+const db = require('../models/pgModel');
 
 const recipesController = {};
 
@@ -110,7 +111,36 @@ recipesController.addRecipe = (req, res, next) => {
   }
 };
 
+recipesController.addRecipeToPostgres = (req, res, next) => {
+  const query = `
+    INSERT INTO recipes (mongo_id)
+    VALUES ($1)
+    RETURNING *
+    `;
+  console.log('before params: ', res.locals.recipeId);
+  const params = [res.locals.recipeId];
+  console.log('after params: ', params);
+  db.query(query, params)
+    .then((data) => {
+      // console.log('data: ', data);
+      // console.log(data.rows);
+      // res.locals.recipeId = data.rows[0].mongo_id;
+      // console.log(typeof res.locals.recipeId);
+      return next();
+    })
+    .catch((err) => {
+      return next({
+        log: `recipesController.addRecipeToPostgres: ERROR: ${err}`,
+        message: {
+          err:
+            'recipesController.addRecipeToPostgress: ERROR: Check server logs for details',
+        },
+      });
+    });
+};
+
 recipesController.saveRecipe = (req, res, next) => {
+  console.log('in saveRecipe');
   models.SavedRecipes.findOneAndUpdate(
     { userId: 'user1' },
     { $push: { recipes: { recipeId: res.locals.recipeId } } },
