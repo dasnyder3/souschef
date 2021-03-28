@@ -56,4 +56,8 @@ module.exports = {
         });
     }
   },
+  checkUserLoggedIn: (req, res, next) => {
+    // console.log('req.user: ', req.user);
+    req.user ? next() : res.redirect('/login');
+  },
 };

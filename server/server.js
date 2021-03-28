@@ -3,10 +3,14 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const app = express();
 const session = require('express-session');
+const db = require('./models/pgModel');
 
 // google oauth
 const passport = require('passport');
-const { findOrCreateUser } = require('./controllers/authController');
+const {
+  findOrCreateUser,
+  checkUserLoggedIn,
+} = require('./controllers/authController');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const {
   GOOGLE_CLIENT_ID,
@@ -33,19 +37,22 @@ passport.serializeUser(function (user, cb) {
   cb(null, user);
 });
 
-passport.deserializeUser(function (obj, cb) {
-  console.log('deserializing user: ', obj);
-  cb(null, obj);
+passport.deserializeUser(function (user, done) {
+  console.log('deserializing user: ', user);
+  const queryString = `
+    SELECT * FROM users WHERE google_id = $1
+  `;
+  const params = [user];
+  db.query(queryString, params)
+    .then((data) => {
+      done(null, data.rows[0]);
+    })
+    .catch((err) => new Error(err));
 });
 
 // require routers
 const recipesRouter = require('./routes/recipes');
 const authRouter = require('./routes/auth');
-
-const checkUserLoggedIn = (req, res, next) => {
-  // console.log('req.user: ', req.user);
-  req.user ? next() : res.redirect('/login');
-};
 
 // handle parsing request body
 app.use(express.json());

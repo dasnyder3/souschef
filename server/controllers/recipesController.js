@@ -6,19 +6,20 @@ const db = require('../models/pgModel');
 const recipesController = {};
 
 recipesController.getRecipes = (req, res, next) => {
-  const recipeIds = res.locals.userRecipes.map((ele) => ele.recipeId);
+  const recipeIds = res.locals.userRecipes; //.map((ele) => ele.recipeId);
   models.Recipes.find({ _id: { $in: recipeIds } })
     .exec()
     .then((data) => {
-      const newUserRecipes = res.locals.userRecipes.map((userRecipe) => {
-        const newUserRecipe = userRecipe.toObject();
-        const recipeDetails = data.filter(
-          (ele) => ele._id.toString() === userRecipe.recipeId.toString()
-        )[0];
-        newUserRecipe.details = recipeDetails;
-        return newUserRecipe;
-      });
-      res.locals.userRecipes = newUserRecipes;
+      console.log('getRecipes data: ', data);
+      // const newUserRecipes = res.locals.userRecipes.map((userRecipe) => {
+      //   const newUserRecipe = userRecipe.toObject();
+      //   const recipeDetails = data.filter(
+      //     (ele) => ele._id.toString() === userRecipe.recipeId.toString()
+      //   )[0];
+      //   newUserRecipe.details = recipeDetails;
+      //   return newUserRecipe;
+      // });
+      res.locals.userRecipes = data;
       return next();
     })
     .catch((err) =>
@@ -126,6 +127,7 @@ recipesController.addRecipeToPostgres = (req, res, next) => {
       // console.log(data.rows);
       // res.locals.recipeId = data.rows[0].mongo_id;
       // console.log(typeof res.locals.recipeId);
+      res.locals.postgresRecipeId = data.rows[0]._id;
       return next();
     })
     .catch((err) => {
@@ -162,14 +164,41 @@ recipesController.saveRecipe = (req, res, next) => {
   );
 };
 
+recipesController.saveRecipePostgres = (req, res, next) => {
+  console.log('req.user: ', req.user);
+  const queryString = `
+    INSERT INTO user_recipes (user_id, recipe_id)
+    VALUES ($1, $2)
+  `;
+  const params = [req.user._id, res.locals.postgresRecipeId];
+  db.query(queryString, params)
+    .then(() => next())
+    .catch((err) =>
+      next({
+        log: `recipesController.saveRecipePostgres: ERROR: ${err}`,
+        message: {
+          err:
+            'recipesController.saveRecipePostgres: ERROR: Check server logs for details',
+        },
+      })
+    );
+};
+
 recipesController.getUserRecipes = (req, res, next) => {
-  models.SavedRecipes.findOne({
-    userId: req.params.userId,
-  })
-    .exec()
+  const queryString = `
+    SELECT b.mongo_id
+    FROM user_recipes a
+    JOIN recipes b
+    ON a.recipe_id = b._id
+    WHERE a.user_id = $1
+  `;
+  const params = [req.user._id];
+  db.query(queryString, params)
     .then((data) => {
-      res.locals.userRecipes = data.recipes;
-      // res.locals.recipeIds = data.recipes.map((ele) => ele.recipeId);
+      console.log(data.rows);
+      res.locals.userRecipes = data.rows.map((ele) => {
+        return JSON.parse(ele.mongo_id);
+      });
       return next();
     })
     .catch((err) =>
@@ -181,6 +210,24 @@ recipesController.getUserRecipes = (req, res, next) => {
         },
       })
     );
+  // models.SavedRecipes.findOne({
+  //   userId: req.params.userId,
+  // })
+  //   .exec()
+  //   .then((data) => {
+  //     res.locals.userRecipes = data.recipes;
+  //     // res.locals.recipeIds = data.recipes.map((ele) => ele.recipeId);
+  //     return next();
+  //   })
+  //   .catch((err) =>
+  //     next({
+  //       log: `recipesController.getUserRecipes: ERROR: ${err}`,
+  //       message: {
+  //         err:
+  //           'recipesController.getUserRecipes: ERROR: Check server logs for details',
+  //       },
+  //     })
+  //   );
 };
 
 recipesController.deleteRecipe = (req, res, next) => {

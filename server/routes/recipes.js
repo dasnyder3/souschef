@@ -2,8 +2,11 @@ const express = require('express');
 const { NamedModulesPlugin } = require('webpack');
 
 const recipesController = require('../controllers/recipesController');
+const { checkUserLoggedIn } = require('../controllers/authController');
 
 const router = express.Router();
+
+router.use(checkUserLoggedIn);
 
 // takes in a recipe url, extracts the ingredients and instructios, returns to requester
 router.post(
@@ -12,6 +15,7 @@ router.post(
   recipesController.parseRecipe,
   recipesController.addRecipe,
   recipesController.addRecipeToPostgres,
+  recipesController.saveRecipePostgres,
   recipesController.saveRecipe,
   (req, res) => res.status(200).json({ ...res.locals.recipe })
 );
