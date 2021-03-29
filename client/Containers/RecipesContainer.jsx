@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import RecipeCard from '../Components/RecipeCard.jsx';
 
-
-const RecipesContainer = ({ recipes, openRecipe, markCooked, markNotCooked, removeRecipe }) => {
+const RecipesContainer = ({
+  recipes,
+  openRecipe,
+  markCooked,
+  markNotCooked,
+  removeRecipe,
+}) => {
   const recipeCards = recipes.map((recipe, i) => {
     return (
       <div className='container'>
         <RecipeCard
           key={`recipe-${i}`}
-          recipe={recipe.details}
+          recipeId={recipe.recipe_id}
+          recipeDetails={recipe.recipeDetails}
           cooked={recipe.cooked}
           openRecipe={openRecipe}
           markCooked={markCooked}
@@ -16,9 +22,9 @@ const RecipesContainer = ({ recipes, openRecipe, markCooked, markNotCooked, remo
           removeRecipe={removeRecipe}
         />
       </div>
-      )
-  })
-  return <div className="recipes-container">{recipeCards}</div>
-}
+    );
+  });
+  return <div className='recipes-container'>{recipeCards}</div>;
+};
 
 export default RecipesContainer;

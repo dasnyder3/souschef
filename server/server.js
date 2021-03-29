@@ -33,12 +33,10 @@ passport.use(
 );
 
 passport.serializeUser(function (user, cb) {
-  console.log('serializing user: ', typeof user);
   cb(null, user);
 });
 
 passport.deserializeUser(function (user, done) {
-  console.log('deserializing user: ', user);
   const queryString = `
     SELECT * FROM users WHERE google_id = $1
   `;
@@ -67,42 +65,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
-// app.get(
-//   '/auth/google',
-//   (req, res, next) => {
-//     console.log('HERE IN THE AUTH GOOGLE ROUTE');
-//     return next();
-//   },
-//   passport.authenticate('google', { scope: ['email', 'profile'] })
-// );
-
-// app.get(
-//   '/auth/google/callback',
-//   (req, res, next) => {
-//     console.log('in callback');
-//     console.log(req.query.code);
-//     return next();
-//   },
-//   passport.authenticate('google', {
-//     failureRedirect: '/login',
-//   }),
-//   (req, res) => {
-//     req.logIn(req.user, (err) => {
-//       if (err) return next(err);
-//       res.redirect('/');
-//     });
-//   }
-// );
-
-// app.get(
-//   '/test',
-//   (req, res, next) => {
-//     console.log('in test route');
-//     return next();
-//   },
-//   (req, res) => res.redirect('/')
-// );
 
 app.use('/auth', authRouter);
 

@@ -15,8 +15,7 @@ router.post(
   recipesController.parseRecipe,
   recipesController.addRecipe,
   recipesController.addRecipeToPostgres,
-  recipesController.saveRecipePostgres,
-  recipesController.saveRecipe,
+  recipesController.saveUserRecipe,
   (req, res) => res.status(200).json({ ...res.locals.recipe })
 );
 
@@ -28,7 +27,7 @@ router.post('/notcooked/:userId', recipesController.markNotCooked, (req, res) =>
   res.sendStatus(200)
 );
 
-router.post('/delete/:userId', recipesController.deleteRecipe, (req, res) =>
+router.delete('/:recipeId', recipesController.deleteRecipe, (req, res) =>
   res.sendStatus(200)
 );
 

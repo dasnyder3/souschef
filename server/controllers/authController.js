@@ -2,7 +2,6 @@ const db = require('../models/pgModel');
 
 module.exports = {
   findOrCreateUser: async function (profile) {
-    console.log('google id type: ', typeof profile.id);
     const findUser = 'SELECT * FROM users WHERE google_id = $1';
     const params = [profile.id];
     let user = await db
@@ -12,7 +11,6 @@ module.exports = {
         throw new Error(err);
       });
     if (!user) {
-      console.log('creating new user');
       const createUser = `
           INSERT INTO users (google_id, display_name, given_name, family_name, picture, email)
           VALUES ($1, $2, $3, $4, $5, $6)
@@ -33,7 +31,6 @@ module.exports = {
           throw new Error(err);
         });
     } else {
-      console.log('updating existing user');
       const updateUser = `
           UPDATE users
           SET display_name = $2, given_name = $3, family_name = $4, picture = $5, email = $6
@@ -57,7 +54,6 @@ module.exports = {
     }
   },
   checkUserLoggedIn: (req, res, next) => {
-    // console.log('req.user: ', req.user);
     req.user ? next() : res.redirect('/login');
   },
 };

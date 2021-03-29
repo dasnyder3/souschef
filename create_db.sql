@@ -39,6 +39,7 @@ CREATE TABLE public.user_recipes (
   "_id" serial NOT NULL,
   "user_id" int NOT NULL,
   "recipe_id" int NOT NULL,
+  "cooked" boolean NOT NULL,
   CONSTRAINT "user_recipes_pk" PRIMARY KEY ("_id")
 );
 
