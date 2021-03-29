@@ -69,11 +69,10 @@ class MainContainer extends Component {
 
   removeRecipe(recipeId) {
     const requestOptions = {
-      method: 'POST',
+      method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipeId: recipeId }),
     };
-    fetch('recipes/delete/user1', requestOptions)
+    fetch(`recipes/${recipeId}`, requestOptions)
       .then(() => this.getRecipes())
       .catch((err) => console.log(err));
   }
@@ -85,9 +84,8 @@ class MainContainer extends Component {
       event.target.className !== 'remove-btn'
     ) {
       const recipeToShow = this.state.recipes.filter(
-        (recipe) => recipe.details._id === recipeId
+        (recipe) => recipe.recipe_id === recipeId
       )[0];
-      console.log(recipeToShow);
       this.setState({ displayedRecipe: recipeToShow });
     }
   }
@@ -120,7 +118,7 @@ class MainContainer extends Component {
         />
         {this.state.displayedRecipe ? (
           <RecipePopup
-            recipe={this.state.displayedRecipe.details.recipe}
+            recipe={this.state.displayedRecipe.recipeDetails.recipe}
             closeRecipe={this.closeRecipe}
           />
         ) : null}

@@ -3,10 +3,14 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const app = express();
 const session = require('express-session');
+const db = require('./models/pgModel');
 
 // google oauth
 const passport = require('passport');
-const { findOrCreateUser } = require('./controllers/authController');
+const {
+  findOrCreateUser,
+  checkUserLoggedIn,
+} = require('./controllers/authController');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const {
   GOOGLE_CLIENT_ID,
@@ -29,23 +33,24 @@ passport.use(
 );
 
 passport.serializeUser(function (user, cb) {
-  console.log('serializing user: ', typeof user);
   cb(null, user);
 });
 
-passport.deserializeUser(function (obj, cb) {
-  console.log('deserializing user: ', obj);
-  cb(null, obj);
+passport.deserializeUser(function (user, done) {
+  const queryString = `
+    SELECT * FROM users WHERE google_id = $1
+  `;
+  const params = [user];
+  db.query(queryString, params)
+    .then((data) => {
+      done(null, data.rows[0]);
+    })
+    .catch((err) => new Error(err));
 });
 
 // require routers
 const recipesRouter = require('./routes/recipes');
 const authRouter = require('./routes/auth');
-
-const checkUserLoggedIn = (req, res, next) => {
-  // console.log('req.user: ', req.user);
-  req.user ? next() : res.redirect('/login');
-};
 
 // handle parsing request body
 app.use(express.json());
@@ -60,42 +65,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
-// app.get(
-//   '/auth/google',
-//   (req, res, next) => {
-//     console.log('HERE IN THE AUTH GOOGLE ROUTE');
-//     return next();
-//   },
-//   passport.authenticate('google', { scope: ['email', 'profile'] })
-// );
-
-// app.get(
-//   '/auth/google/callback',
-//   (req, res, next) => {
-//     console.log('in callback');
-//     console.log(req.query.code);
-//     return next();
-//   },
-//   passport.authenticate('google', {
-//     failureRedirect: '/login',
-//   }),
-//   (req, res) => {
-//     req.logIn(req.user, (err) => {
-//       if (err) return next(err);
-//       res.redirect('/');
-//     });
-//   }
-// );
-
-// app.get(
-//   '/test',
-//   (req, res, next) => {
-//     console.log('in test route');
-//     return next();
-//   },
-//   (req, res) => res.redirect('/')
-// );
 
 app.use('/auth', authRouter);
 
