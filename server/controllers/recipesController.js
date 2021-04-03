@@ -105,27 +105,38 @@ recipesController.addRecipe = (req, res, next) => {
   }
 };
 
-recipesController.addRecipeToPostgres = (req, res, next) => {
-  const query = `
-    INSERT INTO recipes (mongo_id)
-    VALUES ($1)
-    RETURNING *
+recipesController.addRecipeToPostgres = async (req, res, next) => {
+  try {
+    const findRecipeQuery = `
+      SELECT _id
+      FROM recipes
+      WHERE mongo_id = $1
     `;
-  const params = [res.locals.recipeId];
-  db.query(query, params)
-    .then((data) => {
-      res.locals.postgresRecipeId = data.rows[0]._id;
-      return next();
-    })
-    .catch((err) => {
-      return next({
-        log: `recipesController.addRecipeToPostgres: ERROR: ${err}`,
-        message: {
-          err:
-            'recipesController.addRecipeToPostgress: ERROR: Check server logs for details',
-        },
-      });
+    const params = [res.locals.recipeId];
+    const postgresData = await db.query(findRecipeQuery, params);
+    if (postgresData.rows.length > 0) {
+      res.locals.postgresRecipeId = postgresData.rows[0]._id;
+    } else {
+      const insertQuery = `
+        INSERT INTO recipes (mongo_id)
+        VALUES ($1)
+        RETURNING *
+        `;
+      console.log(params);
+      const insertedData = await db.query(insertQuery, params);
+      console.log(insertedData);
+      res.locals.postgresRecipeId = insertedData.rows[0]._id;
+    }
+    return next();
+  } catch (err) {
+    return next({
+      log: `recipesController.addRecipeToPostgres: ERROR: ${err}`,
+      message: {
+        err:
+          'recipesController.addRecipeToPostgress: ERROR: Check server logs for details',
+      },
     });
+  }
 };
 
 recipesController.saveUserRecipe = async (req, res, next) => {
