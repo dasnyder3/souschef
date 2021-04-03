@@ -140,22 +140,36 @@ recipesController.addRecipeToPostgres = async (req, res, next) => {
 };
 
 recipesController.saveUserRecipe = async (req, res, next) => {
-  const queryString = `
-    INSERT INTO user_recipes (user_id, recipe_id, cooked)
-    VALUES ($1, $2, $3)
-  `;
-  const params = [req.user._id, res.locals.postgresRecipeId, false];
-  db.query(queryString, params)
-    .then(() => next())
-    .catch((err) =>
-      next({
-        log: `recipesController.saveRecipePostgres: ERROR: ${err}`,
-        message: {
-          err:
-            'recipesController.saveRecipePostgres: ERROR: Check server logs for details',
-        },
-      })
-    );
+  try {
+    const checkSavedQuery = `
+      SELECT * 
+      FROM user_recipes
+      WHERE user_id = $1 AND recipe_id = $2
+    `;
+    const savedRecipe = await db.query(checkSavedQuery, [
+      req.user._id,
+      res.locals.postgresRecipeId,
+    ]);
+    // console.log(savedRecipe);
+    if (!savedRecipe.rows.length) {
+      console.log('inserting data');
+      const queryString = `
+        INSERT INTO user_recipes (user_id, recipe_id, cooked)
+        VALUES ($1, $2, $3)
+      `;
+      const params = [req.user._id, res.locals.postgresRecipeId, false];
+      await db.query(queryString, params);
+    }
+    return next();
+  } catch (err) {
+    next({
+      log: `recipesController.saveRecipePostgres: ERROR: ${err}`,
+      message: {
+        err:
+          'recipesController.saveRecipePostgres: ERROR: Check server logs for details',
+      },
+    });
+  }
 };
 
 recipesController.getUserRecipes = (req, res, next) => {

@@ -25,7 +25,7 @@ class MainContainer extends Component {
   }
 
   getRecipes() {
-    fetch('/recipes/user1')
+    fetch('/recipes')
       .then((data) => data.json())
       .then((data) => this.setState({ recipes: [...data], newRecipe: '' }));
   }
@@ -51,7 +51,7 @@ class MainContainer extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ recipeId: recipeId }),
     };
-    fetch('recipes/cooked/user1', requestOptions)
+    fetch('recipes/cooked', requestOptions)
       .then(() => this.getRecipes())
       .catch((err) => console.log(err));
   }
@@ -62,7 +62,7 @@ class MainContainer extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ recipeId: recipeId }),
     };
-    fetch('recipes/notcooked/user1', requestOptions)
+    fetch('recipes/notcooked', requestOptions)
       .then(() => this.getRecipes())
       .catch((err) => console.log(err));
   }

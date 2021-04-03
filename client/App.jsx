@@ -10,10 +10,13 @@ const App = () => {
       <nav>
         <ul>
           <li>
-            <Link to='/'>Home</Link>
+            <a href='/'>Home</a>
           </li>
           <li>
-            <Link to='/login'>Login</Link>
+            <a href='/login'>Login</a>
+          </li>
+          <li>
+            <a href='/logout'>Logout</a>
           </li>
         </ul>
       </nav>

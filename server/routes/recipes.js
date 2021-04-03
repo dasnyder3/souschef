@@ -32,7 +32,7 @@ router.delete('/:recipeId', recipesController.deleteRecipe, (req, res) =>
 );
 
 router.get(
-  '/:userId',
+  '/',
   recipesController.getUserRecipes,
   recipesController.getRecipes,
   (req, res) => res.status(200).json([...res.locals.userRecipes])

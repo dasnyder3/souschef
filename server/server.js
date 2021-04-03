@@ -10,6 +10,7 @@ const passport = require('passport');
 const {
   findOrCreateUser,
   checkUserLoggedIn,
+  checkUserNotLoggedIn,
 } = require('./controllers/authController');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const {
@@ -72,8 +73,13 @@ app.use('/build', express.static(path.join(__dirname, '../build')));
 
 app.use('/recipes', recipesRouter);
 
-app.get('/login', (req, res) => {
+app.get('/login', checkUserNotLoggedIn, (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../index.html'));
+});
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/login');
 });
 
 app.get('/*', checkUserLoggedIn, (req, res) => {

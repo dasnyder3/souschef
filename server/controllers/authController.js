@@ -56,4 +56,7 @@ module.exports = {
   checkUserLoggedIn: (req, res, next) => {
     req.user ? next() : res.redirect('/login');
   },
+  checkUserNotLoggedIn: (req, res, next) => {
+    req.user ? res.redirect('/') : next();
+  },
 };
