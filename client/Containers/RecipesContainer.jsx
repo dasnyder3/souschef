@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import RecipeCard from '../Components/RecipeCard.jsx';
+import CardDeck from 'react-bootstrap/CardDeck';
+import CardGroup from 'react-bootstrap/CardGroup';
 
 const RecipesContainer = ({
   recipes,
@@ -24,7 +26,11 @@ const RecipesContainer = ({
       </div>
     );
   });
-  return <div className='recipes-container'>{recipeCards}</div>;
+  return (
+    <div className='recipes-container'>
+      <CardDeck>{recipeCards}</CardDeck>
+    </div>
+  );
 };
 
 export default RecipesContainer;

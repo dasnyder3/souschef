@@ -19,11 +19,11 @@ router.post(
   (req, res) => res.status(200).json({ ...res.locals.recipe })
 );
 
-router.post('/cooked/:userId', recipesController.markCooked, (req, res) =>
+router.post('/cooked', recipesController.markCooked, (req, res) =>
   res.sendStatus(200)
 );
 
-router.post('/notcooked/:userId', recipesController.markNotCooked, (req, res) =>
+router.post('/notcooked', recipesController.markNotCooked, (req, res) =>
   res.sendStatus(200)
 );
 

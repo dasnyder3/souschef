@@ -1,4 +1,6 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
 const RecipeCard = ({
   recipeDetails,
@@ -10,36 +12,40 @@ const RecipeCard = ({
   removeRecipe,
 }) => {
   return (
-    <article
-      className='recipe-card'
-      id={recipeId}
+    <Card
       onClick={(event) => openRecipe(event, recipeId)}
+      style={{ width: '18rem' }}
     >
-      <img src={recipeDetails.recipe.image}></img>
-      <div className='recipe-details'>
-        <h3>{recipeDetails.name}</h3>
+      <Card.Img variant='top' src={recipeDetails.recipe.image} />
+      <Card.Title>{recipeDetails.name}</Card.Title>
+      <Card.Text>
         {recipeDetails.recipe.readyInMinutes ? (
           <p>Ready in {recipeDetails.recipe.readyInMinutes} minutes</p>
         ) : (
           <p>Time estimate unavailable</p>
         )}
         {!cooked ? (
-          <button onClick={() => markCooked(recipeId)} className='cooked-btn'>
+          <Button
+            onClick={() => markCooked(recipeId)}
+            className='cooked-btn'
+            variant='secondary'
+          >
             Made it
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={() => markNotCooked(recipeId)}
             className='cooked-btn filled'
+            variant='primary'
           >
             Cooked
-          </button>
+          </Button>
         )}
-        <button className='remove-btn' onClick={() => removeRecipe(recipeId)}>
+        <Button className='remove-btn' onClick={() => removeRecipe(recipeId)}>
           Delete
-        </button>
-      </div>
-    </article>
+        </Button>
+      </Card.Text>
+    </Card>
   );
 };
 

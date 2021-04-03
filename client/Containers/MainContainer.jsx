@@ -10,6 +10,7 @@ class MainContainer extends Component {
       newRecipe: '',
       recipes: [],
       displayedRecipe: null,
+      showRecipe: false,
     };
     this.updateRecipe = this.updateRecipe.bind(this);
     this.parseRecipe = this.parseRecipe.bind(this);
@@ -86,16 +87,17 @@ class MainContainer extends Component {
       const recipeToShow = this.state.recipes.filter(
         (recipe) => recipe.recipe_id === recipeId
       )[0];
-      this.setState({ displayedRecipe: recipeToShow });
+      this.setState({ displayedRecipe: recipeToShow, showRecipe: true });
     }
   }
 
   closeRecipe(event) {
     // will check if the click came from the popup itself
     // if not, close the popup; otherwise, leave it open
-    if (!event.target.closest('.recipe-popup-inner')) {
-      this.setState({ displayedRecipe: null });
-    }
+    // if (!event.target.closest('.recipe-popup-inner')) {
+    //   this.setState({ displayedRecipe: null });
+    // }
+    this.setState({ displayedRecipe: null, showRecipe: false });
   }
 
   render() {
@@ -116,10 +118,12 @@ class MainContainer extends Component {
           markNotCooked={this.markNotCooked}
           removeRecipe={this.removeRecipe}
         />
-        {this.state.displayedRecipe ? (
+        {this.state.showRecipe ? (
           <RecipePopup
+            openRecipe={this.openRecipe}
             recipe={this.state.displayedRecipe.recipeDetails.recipe}
             closeRecipe={this.closeRecipe}
+            showRecipe={this.state.showRecipe}
           />
         ) : null}
       </div>

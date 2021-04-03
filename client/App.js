@@ -4,6 +4,8 @@ import MainContainer from './Containers/MainContainer.jsx';
 import Login from './Components/Login.jsx';
 import './styles.scss';
 
+// import './App.css';
+
 const App = () => {
   return (
     <Router>

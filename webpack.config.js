@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: '/client/index.js',
@@ -7,10 +8,11 @@ module.exports = {
     filename: 'bundle.js',
   },
   mode: process.env.NODE_ENV,
+  plugins: [new MiniCssExtractPlugin()],
   module: {
     rules: [
       {
-        test: /\.jsx?/,
+        test: /\.js?/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -19,26 +21,31 @@ module.exports = {
           },
         },
       },
-      {
-        test: /.(css|scss)$/,
-        exclude: [/node_modules/, /client\/stylesheets\/modules/],
-        use: ['style-loader', 'css-loader', 'sass-loader'],
-      },
-      {
-        test: /.(css|scss)$/,
-        include: [/client\/stylesheets\/modules/],
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              localIdentName: '[name]__[local]___[hash:base64:5]',
-            },
-          },
-          'sass-loader',
-        ],
-      },
+      { test: /\.css$/, loader: 'style-loader!css-loader' },
+      // {
+      //   test: /\.css$/i,
+      //   use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      // },
+      // {
+      //   test: /.(css|scss)$/,
+      //   exclude: [/node_modules/, /client\/stylesheets\/modules/],
+      //   use: ['style-loader', 'css-loader', 'sass-loader'],
+      // },
+      // {
+      //   test: /.(css|scss)$/,
+      //   include: [/client\/stylesheets\/modules/],
+      //   use: [
+      //     'style-loader',
+      //     {
+      //       loader: 'css-loader',
+      //       options: {
+      //         modules: true,
+      //         localIdentName: '[name]__[local]___[hash:base64:5]',
+      //       },
+      //     },
+      //     'sass-loader',
+      //   ],
+      // },
     ],
   },
   devServer: {
