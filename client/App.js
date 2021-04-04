@@ -15,10 +15,10 @@ const App = () => {
       .then((data) => updateUser(data.user));
     // console.log(user);
   }, []);
-  // useEffect(() => console.log(user), [user]);
+  useEffect(() => console.log(user), [user]);
   return (
     <Router>
-      <Navigation />
+      <Navigation user={user} />
       <Switch>
         <Route path='/login'>
           <Login />

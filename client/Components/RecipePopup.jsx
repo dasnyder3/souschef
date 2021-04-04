@@ -3,6 +3,11 @@ import Ingredient from './Ingredient.jsx';
 import Step from './Step.jsx';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Image from 'react-bootstrap/Image';
 
 const RecipePopup = ({
   recipe,
@@ -50,30 +55,47 @@ const RecipePopup = ({
     <Modal show={showRecipe} onHide={closeRecipe} size='lg'>
       <Modal.Header>
         <Modal.Title>{recipe.title}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
         <a href={recipe.sourceUrl} target='_blank'>
           View on original site
         </a>
-        <span>Serves:</span>
-        <input
-          type='text'
-          id='serves'
-          defaultValue={recipe.servings}
-          onChange={(e) => updateScaler(e.target.value, recipe.servings)}
-        ></input>
-        <span>Ingredients:</span>
-        {ingredients}
-        <span>Directions:</span>
-        {directions}
+      </Modal.Header>
+      <Modal.Body>
+        <Image src={recipe.image} fluid></Image>
+        <Form.Row style={{ padding: '6px' }}>
+          <Form.Label column lg={1}>
+            Serves:
+          </Form.Label>
+          <Form.Control
+            type='text'
+            defaultValue={recipe.servings}
+            onChange={(e) => updateScaler(e.target.value, recipe.servings)}
+            style={{ width: '50px' }}
+          ></Form.Control>
+        </Form.Row>
+        <h3>Ingredients:</h3>
+        <Container>{ingredients}</Container>
+        <h3>Directions:</h3>
+        <Container>{directions}</Container>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='primary' onClick={closeRecipe}>
-          Close
-        </Button>
-        <Button id={recipeId} onClick={removeRecipe}>
-          Delete
-        </Button>
+        <Container>
+          <Row>
+            <Col md={4}>
+              <Button variant='danger' id={recipeId} onClick={removeRecipe}>
+                Delete
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                variant='primary'
+                onClick={closeRecipe}
+                className='float-right'
+              >
+                Close
+              </Button>
+            </Col>
+          </Row>
+        </Container>
       </Modal.Footer>
     </Modal>
   );

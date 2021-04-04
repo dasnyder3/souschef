@@ -17,8 +17,8 @@ const RecipeCard = ({
       style={{ width: '17rem' }}
     >
       <Card.Img variant='top' src={recipeDetails.recipe.image} />
-      <Card.Title>{recipeDetails.name}</Card.Title>
-      <Card.Text>
+      <Card.Title style={{ padding: '3px' }}>{recipeDetails.name}</Card.Title>
+      <Card.Text style={{ padding: '3px' }}>
         {recipeDetails.recipe.readyInMinutes ? (
           <span>Ready in {recipeDetails.recipe.readyInMinutes} minutes</span>
         ) : (
@@ -27,11 +27,19 @@ const RecipeCard = ({
       </Card.Text>
       <Card.Footer>
         {!cooked ? (
-          <Button onClick={() => markCooked(recipeId)} variant='secondary'>
+          <Button
+            onClick={() => markCooked(recipeId)}
+            variant='secondary'
+            style={{ width: '100%' }}
+          >
             Made it
           </Button>
         ) : (
-          <Button onClick={() => markNotCooked(recipeId)} variant='primary'>
+          <Button
+            onClick={() => markNotCooked(recipeId)}
+            variant='primary'
+            style={{ width: '100%' }}
+          >
             Cooked
           </Button>
         )}

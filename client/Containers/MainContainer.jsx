@@ -4,7 +4,8 @@ import RecipePopup from '../Components/RecipePopup.jsx';
 import RecipesContainer from './RecipesContainer.jsx';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Spinner from 'react-bootstrap/Spinner';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 class MainContainer extends Component {
   constructor(props) {
@@ -120,20 +121,30 @@ class MainContainer extends Component {
     console.log(user);
     return (
       <Container fluid>
-        <header className='header-container'>
-          <h3>Bon Appetit, {user.given_name}</h3>
-          <Button as='span' onClick={this.toggleRecipePopup}>
-            Add Recipe
-          </Button>
-          <AddRecipe
-            newRecipe={this.state.newRecipe}
-            updateRecipe={this.updateRecipe}
-            parseRecipe={this.parseRecipe}
-            toggleRecipePopup={this.toggleRecipePopup}
-            addRecipePopup={this.state.addRecipePopup}
-            loadingButton={this.state.loadingButton}
-          />
-        </header>
+        <Container style={{ padding: '5px' }} fluid>
+          <Row>
+            <Col md={4}>
+              <h3>Bon Appetit, {user.given_name}</h3>
+            </Col>
+            <Col md={{ span: 4, offset: 4 }}>
+              <Button
+                as='span'
+                onClick={this.toggleRecipePopup}
+                className='float-right'
+              >
+                Add Recipe
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+        <AddRecipe
+          newRecipe={this.state.newRecipe}
+          updateRecipe={this.updateRecipe}
+          parseRecipe={this.parseRecipe}
+          toggleRecipePopup={this.toggleRecipePopup}
+          addRecipePopup={this.state.addRecipePopup}
+          loadingButton={this.state.loadingButton}
+        />
         <RecipesContainer
           recipes={this.state.recipes}
           openRecipe={this.openRecipe}
