@@ -52,8 +52,9 @@ module.exports = {
     publicPath: '/build/',
     proxy: {
       '/recipes': 'http://localhost:3000',
-      '/auth/google': 'http://localhost:3000',
-      '/auth/google/callback': 'http://localhost:3000',
+      '/auth': 'http://localhost:3000',
+      // '/auth/google': 'http://localhost:3000',
+      // '/auth/google/callback': 'http://localhost:3000',
       '/login': 'http://localhost:3000',
       '/': 'http://localhost:3000',
     },

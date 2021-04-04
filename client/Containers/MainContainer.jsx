@@ -3,17 +3,19 @@ import AddRecipe from '../Components/AddRecipe.jsx';
 import RecipePopup from '../Components/RecipePopup.jsx';
 import RecipesContainer from './RecipesContainer.jsx';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import Container from 'react-bootstrap/Container';
+import Spinner from 'react-bootstrap/Spinner';
 
 class MainContainer extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       newRecipe: '',
       recipes: [],
       displayedRecipe: null,
       showRecipe: false,
       addRecipePopup: false,
+      loadingButton: false,
     };
     this.updateRecipe = this.updateRecipe.bind(this);
     this.parseRecipe = this.parseRecipe.bind(this);
@@ -26,6 +28,7 @@ class MainContainer extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.person);
     this.getRecipes();
   }
 
@@ -40,6 +43,7 @@ class MainContainer extends Component {
   }
 
   parseRecipe(event) {
+    this.setState({ loadingButton: true });
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -75,13 +79,16 @@ class MainContainer extends Component {
       .catch((err) => console.log(err));
   }
 
-  removeRecipe(recipeId) {
+  removeRecipe(e) {
     const requestOptions = {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     };
-    fetch(`recipes/${recipeId}`, requestOptions)
-      .then(() => this.getRecipes())
+    fetch(`recipes/${e.target.id}`, requestOptions)
+      .then(() => {
+        this.closeRecipe();
+        this.getRecipes();
+      })
       .catch((err) => console.log(err));
   }
 
@@ -98,30 +105,33 @@ class MainContainer extends Component {
   }
 
   closeRecipe(event) {
-    // will check if the click came from the popup itself
-    // if not, close the popup; otherwise, leave it open
-    // if (!event.target.closest('.recipe-popup-inner')) {
-    //   this.setState({ displayedRecipe: null });
-    // }
     this.setState({ displayedRecipe: null, showRecipe: false });
   }
 
   toggleRecipePopup() {
-    this.setState({ addRecipePopup: !this.state.addRecipePopup });
+    this.setState({
+      addRecipePopup: !this.state.addRecipePopup,
+      loadingButton: false,
+    });
   }
 
   render() {
+    const { user } = this.props;
+    console.log(user);
     return (
-      <div>
+      <Container fluid>
         <header className='header-container'>
-          <h1>Sous-chef</h1>
-          <Button onClick={this.toggleRecipePopup}>Add Recipe</Button>
+          <h3>Bon Appetit, {user.given_name}</h3>
+          <Button as='span' onClick={this.toggleRecipePopup}>
+            Add Recipe
+          </Button>
           <AddRecipe
             newRecipe={this.state.newRecipe}
             updateRecipe={this.updateRecipe}
             parseRecipe={this.parseRecipe}
             toggleRecipePopup={this.toggleRecipePopup}
             addRecipePopup={this.state.addRecipePopup}
+            loadingButton={this.state.loadingButton}
           />
         </header>
         <RecipesContainer
@@ -134,12 +144,14 @@ class MainContainer extends Component {
         {this.state.showRecipe ? (
           <RecipePopup
             openRecipe={this.openRecipe}
+            recipeId={this.state.displayedRecipe.recipe_id}
             recipe={this.state.displayedRecipe.recipeDetails.recipe}
             closeRecipe={this.closeRecipe}
             showRecipe={this.state.showRecipe}
+            removeRecipe={this.removeRecipe}
           />
         ) : null}
-      </div>
+      </Container>
     );
   }
 }

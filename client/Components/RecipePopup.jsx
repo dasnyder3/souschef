@@ -4,7 +4,14 @@ import Step from './Step.jsx';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-const RecipePopup = ({ recipe, closeRecipe, openRecipe, showRecipe }) => {
+const RecipePopup = ({
+  recipe,
+  closeRecipe,
+  openRecipe,
+  showRecipe,
+  removeRecipe,
+  recipeId,
+}) => {
   const [scaler, updateScaler] = useState(1);
 
   const setScaler = (newServing, servings) => {
@@ -40,34 +47,35 @@ const RecipePopup = ({ recipe, closeRecipe, openRecipe, showRecipe }) => {
     return <Step key={`step-${i}`} number={step.number} step={step.step} />;
   });
   return (
-    <div>
-      <Modal show={showRecipe} onHide={closeRecipe}>
-        <Modal.Header>
-          <Modal.Title>{recipe.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <a href={recipe.sourceUrl} target='_blank'>
-            View on original site
-          </a>
-          <p>Serves:</p>
-          <input
-            type='text'
-            id='serves'
-            defaultValue={recipe.servings}
-            onChange={(e) => updateScaler(e.target.value, recipe.servings)}
-          ></input>
-          <h3>Ingredients:</h3>
-          {ingredients}
-          <h3>Directions:</h3>
-          {directions}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant='primary' onClick={closeRecipe}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+    <Modal show={showRecipe} onHide={closeRecipe} size='lg'>
+      <Modal.Header>
+        <Modal.Title>{recipe.title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <a href={recipe.sourceUrl} target='_blank'>
+          View on original site
+        </a>
+        <span>Serves:</span>
+        <input
+          type='text'
+          id='serves'
+          defaultValue={recipe.servings}
+          onChange={(e) => updateScaler(e.target.value, recipe.servings)}
+        ></input>
+        <span>Ingredients:</span>
+        {ingredients}
+        <span>Directions:</span>
+        {directions}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant='primary' onClick={closeRecipe}>
+          Close
+        </Button>
+        <Button id={recipeId} onClick={removeRecipe}>
+          Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

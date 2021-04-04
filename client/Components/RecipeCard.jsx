@@ -14,16 +14,18 @@ const RecipeCard = ({
   return (
     <Card
       onClick={(event) => openRecipe(event, recipeId)}
-      style={{ width: '18rem' }}
+      style={{ width: '17rem' }}
     >
       <Card.Img variant='top' src={recipeDetails.recipe.image} />
       <Card.Title>{recipeDetails.name}</Card.Title>
       <Card.Text>
         {recipeDetails.recipe.readyInMinutes ? (
-          <p>Ready in {recipeDetails.recipe.readyInMinutes} minutes</p>
+          <span>Ready in {recipeDetails.recipe.readyInMinutes} minutes</span>
         ) : (
-          <p>Time estimate unavailable</p>
+          <span>Time estimate unavailable</span>
         )}
+      </Card.Text>
+      <Card.Footer>
         {!cooked ? (
           <Button onClick={() => markCooked(recipeId)} variant='secondary'>
             Made it
@@ -33,8 +35,7 @@ const RecipeCard = ({
             Cooked
           </Button>
         )}
-        <Button onClick={() => removeRecipe(recipeId)}>Delete</Button>
-      </Card.Text>
+      </Card.Footer>
     </Card>
   );
 };
