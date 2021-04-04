@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import MainContainer from './Containers/MainContainer.jsx';
 import Login from './Components/Login.jsx';
+import Nav from 'react-bootstrap/Nav';
 import './styles.scss';
 
 // import './App.css';
@@ -9,19 +10,17 @@ import './styles.scss';
 const App = () => {
   return (
     <Router>
-      <nav>
-        <ul>
-          <li>
-            <a href='/'>Home</a>
-          </li>
-          <li>
-            <a href='/login'>Login</a>
-          </li>
-          <li>
-            <a href='/logout'>Logout</a>
-          </li>
-        </ul>
-      </nav>
+      <Nav defaultActiveKey='/'>
+        <Nav.Item>
+          <Nav.Link href='/'>Home</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link href='/login'>Login</Nav.Link>
+        </Nav.Item>
+        <Nav.Item className='m1-auto'>
+          <Nav.Link href='/logout'>Logout</Nav.Link>
+        </Nav.Item>
+      </Nav>
       <Switch>
         <Route path='/login'>
           <Login />

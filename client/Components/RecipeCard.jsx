@@ -25,25 +25,15 @@ const RecipeCard = ({
           <p>Time estimate unavailable</p>
         )}
         {!cooked ? (
-          <Button
-            onClick={() => markCooked(recipeId)}
-            className='cooked-btn'
-            variant='secondary'
-          >
+          <Button onClick={() => markCooked(recipeId)} variant='secondary'>
             Made it
           </Button>
         ) : (
-          <Button
-            onClick={() => markNotCooked(recipeId)}
-            className='cooked-btn filled'
-            variant='primary'
-          >
+          <Button onClick={() => markNotCooked(recipeId)} variant='primary'>
             Cooked
           </Button>
         )}
-        <Button className='remove-btn' onClick={() => removeRecipe(recipeId)}>
-          Delete
-        </Button>
+        <Button onClick={() => removeRecipe(recipeId)}>Delete</Button>
       </Card.Text>
     </Card>
   );

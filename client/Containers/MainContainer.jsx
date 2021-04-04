@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import AddRecipe from '../Components/AddRecipe.jsx';
 import RecipePopup from '../Components/RecipePopup.jsx';
 import RecipesContainer from './RecipesContainer.jsx';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 class MainContainer extends Component {
   constructor() {
@@ -11,6 +13,7 @@ class MainContainer extends Component {
       recipes: [],
       displayedRecipe: null,
       showRecipe: false,
+      addRecipePopup: false,
     };
     this.updateRecipe = this.updateRecipe.bind(this);
     this.parseRecipe = this.parseRecipe.bind(this);
@@ -19,6 +22,7 @@ class MainContainer extends Component {
     this.markCooked = this.markCooked.bind(this);
     this.markNotCooked = this.markNotCooked.bind(this);
     this.removeRecipe = this.removeRecipe.bind(this);
+    this.toggleRecipePopup = this.toggleRecipePopup.bind(this);
   }
 
   componentDidMount() {
@@ -42,7 +46,10 @@ class MainContainer extends Component {
       body: JSON.stringify({ url: this.state.newRecipe }),
     };
     fetch('recipes/parse', requestOptions)
-      .then(() => this.getRecipes())
+      .then(() => {
+        this.getRecipes();
+        this.toggleRecipePopup();
+      })
       .catch((err) => console.log(err));
   }
 
@@ -80,9 +87,8 @@ class MainContainer extends Component {
 
   openRecipe(event, recipeId) {
     if (
-      event.target.className !== 'cooked-btn' &&
-      event.target.className !== 'cooked-btn filled' &&
-      event.target.className !== 'remove-btn'
+      event.target.className !== 'btn btn-primary' &&
+      event.target.className !== 'btn btn-secondary'
     ) {
       const recipeToShow = this.state.recipes.filter(
         (recipe) => recipe.recipe_id === recipeId
@@ -100,15 +106,22 @@ class MainContainer extends Component {
     this.setState({ displayedRecipe: null, showRecipe: false });
   }
 
+  toggleRecipePopup() {
+    this.setState({ addRecipePopup: !this.state.addRecipePopup });
+  }
+
   render() {
     return (
       <div>
         <header className='header-container'>
           <h1>Sous-chef</h1>
+          <Button onClick={this.toggleRecipePopup}>Add Recipe</Button>
           <AddRecipe
             newRecipe={this.state.newRecipe}
             updateRecipe={this.updateRecipe}
             parseRecipe={this.parseRecipe}
+            toggleRecipePopup={this.toggleRecipePopup}
+            addRecipePopup={this.state.addRecipePopup}
           />
         </header>
         <RecipesContainer
