@@ -31,6 +31,10 @@ router.delete('/:recipeId', recipesController.deleteRecipe, (req, res) =>
   res.sendStatus(200)
 );
 
+router.post('/comment', recipesController.addComment, (req, res) =>
+  res.status(200).json({ recipeComment: res.locals.recipeComment })
+);
+
 router.get(
   '/',
   recipesController.getUserRecipes,

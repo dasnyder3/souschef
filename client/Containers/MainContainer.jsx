@@ -36,7 +36,10 @@ class MainContainer extends Component {
   getRecipes() {
     fetch('/recipes')
       .then((data) => data.json())
-      .then((data) => this.setState({ recipes: [...data], newRecipe: '' }));
+      .then((data) => {
+        console.log('recipes: ', data);
+        this.setState({ recipes: [...data], newRecipe: '' });
+      });
   }
 
   updateRecipe(text) {
@@ -161,6 +164,7 @@ class MainContainer extends Component {
             closeRecipe={this.closeRecipe}
             showRecipe={this.state.showRecipe}
             removeRecipe={this.removeRecipe}
+            savedRecipeId={this.state.displayedRecipe.saved_recipe_id}
           />
         ) : null}
       </Container>

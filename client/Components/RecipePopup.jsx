@@ -16,11 +16,31 @@ const RecipePopup = ({
   showRecipe,
   removeRecipe,
   recipeId,
+  savedRecipeId,
 }) => {
   const [scaler, updateScaler] = useState(1);
 
   const setScaler = (newServing, servings) => {
     updateScaler(newServing / servings);
+  };
+
+  const [comment, updateComment] = useState('');
+
+  const changeComment = (event) => updateComment(event.target.value);
+
+  const submitComment = () => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        saved_recipe_id: savedRecipeId,
+        comment,
+      }),
+    };
+    fetch('/recipes/comment', requestOptions)
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+    updateComment('');
   };
 
   if (!recipe.extendedIngredients || !recipe.analyzedInstructions[0]) {
@@ -76,6 +96,10 @@ const RecipePopup = ({
         <Container>{ingredients}</Container>
         <h3>Directions:</h3>
         <Container>{directions}</Container>
+        <Form>
+          <Form.Control type='text' value={comment} onChange={changeComment} />
+          <Button onClick={submitComment}>Submit</Button>
+        </Form>
       </Modal.Body>
       <Modal.Footer>
         <Container>

@@ -174,7 +174,7 @@ recipesController.saveUserRecipe = async (req, res, next) => {
 
 recipesController.getUserRecipes = (req, res, next) => {
   const queryString = `
-    SELECT b.mongo_id, a.cooked, a.recipe_id
+    SELECT b.mongo_id, a.cooked, a.recipe_id, a._id
     FROM user_recipes a
     JOIN recipes b
     ON a.recipe_id = b._id
@@ -188,6 +188,7 @@ recipesController.getUserRecipes = (req, res, next) => {
           recipe_id: ele.recipe_id,
           mongo_id: JSON.parse(ele.mongo_id),
           cooked: ele.cooked,
+          saved_recipe_id: ele._id,
         };
       });
       return next();
@@ -252,12 +253,35 @@ recipesController.markNotCooked = (req, res, next) => {
   const params = [req.body.recipeId, req.user._id];
   db.query(queryString, params)
     .then(() => next())
-    .catch(() =>
+    .catch((err) =>
       next({
         log: `recipesController.markCooked: ERROR: ${err}`,
         message: {
           err:
             'recipesController.markCooked: ERROR: Check server logs for details',
+        },
+      })
+    );
+};
+
+recipesController.addComment = (req, res, next) => {
+  const queryString = `
+    INSERT INTO recipe_comments (saved_recipe_id, comment)
+        VALUES ($1, $2)
+        RETURNING *
+  `;
+  const params = [req.body.saved_recipe_id, req.body.comment];
+  db.query(queryString, params)
+    .then((data) => {
+      res.locals.recipeComment = data.rows[0];
+      return next();
+    })
+    .catch((err) =>
+      next({
+        log: `recipesController.addComment: ERROR: ${err}`,
+        message: {
+          err:
+            'recipesController.addComment: ERROR: Check server logs for details',
         },
       })
     );

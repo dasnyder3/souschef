@@ -57,6 +57,13 @@ CREATE TABLE public.group_recipes (
   CONSTRAINT "group_recipes_pk" PRIMARY KEY ("_id")
 );
 
+CREATE TABLE public.recipe_comments (
+  "_id" serial NOT NULL,
+  "saved_recipe_id" int NOT NULL,
+  "comment" text NOT NULL,
+  CONSTRAINT "recipe_comments_pk" PRIMARY KEY ("_id")
+);
+
 ALTER TABLE public.user_recipes ADD CONSTRAINT "user_recipes_fk0" FOREIGN KEY ("user_id") REFERENCES public.users("_id");
 ALTER TABLE public.user_recipes ADD CONSTRAINT "user_recipes_fk1" FOREIGN KEY ("recipe_id") REFERENCES public.recipes("_id");
 
@@ -65,3 +72,5 @@ ALTER TABLE public.user_groups ADD CONSTRAINT "user_groups_fk1" FOREIGN KEY ("gr
 
 ALTER TABLE public.group_recipes ADD CONSTRAINT "group_recipes_fk0" FOREIGN KEY ("group_id") REFERENCES public.groups("_id");
 ALTER TABLE public.group_recipes ADD CONSTRAINT "group_recipes_fk1" FOREIGN KEY ("recipe_id") REFERENCES public.recipes("_id");
+
+ALTER TABLE public.recipe_comments ADD CONSTRAINT "recipe_comments_fk0" FOREIGN KEY ("saved_recipe_id") REFERENCES public.user_recipes("_id");
