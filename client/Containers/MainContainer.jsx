@@ -94,9 +94,10 @@ class MainContainer extends Component {
   }
 
   openRecipe(event, recipeId) {
+    console.log(event.target.className);
     if (
       event.target.className !== 'btn btn-primary' &&
-      event.target.className !== 'btn btn-secondary'
+      event.target.className !== 'btn btn-outline-primary'
     ) {
       const recipeToShow = this.state.recipes.filter(
         (recipe) => recipe.recipe_id === recipeId
