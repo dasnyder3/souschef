@@ -1,7 +1,8 @@
 const axios = require('axios').default;
-const { FOOD_API_KEY } = require('../keys');
 const models = require('../models/models');
 const db = require('../models/pgModel');
+const config = require('config');
+const FOOD_API_KEY = config.get('FOOD_API_KEY');
 
 const recipesController = {};
 

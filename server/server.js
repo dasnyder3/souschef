@@ -4,6 +4,10 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const session = require('express-session');
 const db = require('./models/pgModel');
+const config = require('config');
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET } = config.get(
+  'googleOAuth'
+);
 
 // google oauth
 const passport = require('passport');
@@ -13,11 +17,7 @@ const {
   checkUserNotLoggedIn,
 } = require('./controllers/authController');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const {
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  SESSION_SECRET,
-} = require('./keys');
+
 passport.use(
   new GoogleStrategy(
     {

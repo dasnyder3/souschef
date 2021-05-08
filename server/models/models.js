@@ -1,16 +1,18 @@
 const mongoose = require('mongoose');
+const config = require('config');
 
-const { MONGO_URI } = require('../keys.js'); 
+const MONGO_URI = config.get('MONGO_URI');
 
-mongoose.connect(MONGO_URI, {
-  // options for the connect method to parse the URI
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  // sets the name of the DB that our collections are part of
-  dbName: 'souschef'
-})
+mongoose
+  .connect(MONGO_URI, {
+    // options for the connect method to parse the URI
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    // sets the name of the DB that our collections are part of
+    dbName: 'souschef',
+  })
   .then(() => console.log('Connected to Mongo DB.'))
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
 const Schema = mongoose.Schema;
 
@@ -19,115 +21,111 @@ const recipeSchema = new Schema({
   url: String,
   recipe: {
     vegetarian: {
-      type: Boolean
+      type: Boolean,
     },
     vegan: {
-      type: Boolean
+      type: Boolean,
     },
     glutenFree: {
-      type: Boolean
+      type: Boolean,
     },
     dairyFree: {
-      type: Boolean
+      type: Boolean,
     },
     veryHealthy: {
-      type: Boolean
+      type: Boolean,
     },
     cheap: {
-      type: Boolean
+      type: Boolean,
     },
     veryPopular: {
-      type: Boolean
+      type: Boolean,
     },
     sustainable: {
-      type: Boolean
+      type: Boolean,
     },
     weightWatcherSmartPoints: {
-      type: Number
+      type: Number,
     },
     gaps: {
-      type: String
+      type: String,
     },
     lowFodmap: {
-      type: Boolean
+      type: Boolean,
     },
     preparationMinutes: {
-      type: Number
+      type: Number,
     },
     cookingMinutes: {
-      type: Number
+      type: Number,
     },
     aggregateLikes: {
-      type: Number
+      type: Number,
     },
     spoonacularScore: {
-      type: Number
+      type: Number,
     },
     healthScore: {
-      type: Number
+      type: Number,
     },
     pricePerServing: {
-      type: Number
+      type: Number,
     },
     extendedIngredients: {
-      type: [
-        {}
-      ]
+      type: [{}],
     },
     id: {
-      type: Number
+      type: Number,
     },
     title: {
-      type: String
+      type: String,
     },
     readyInMinutes: {
-      type: Number
+      type: Number,
     },
     servings: {
-      type: Number
+      type: Number,
     },
     sourceUrl: {
-      type: String
+      type: String,
     },
     image: {
-      type: String
+      type: String,
     },
     imageType: {
-      type: String
+      type: String,
     },
     summary: {
-      type: {}
+      type: {},
     },
     cuisines: {
-      type: Array
+      type: Array,
     },
     dishTypes: {
-      type: Array
+      type: Array,
     },
     diets: {
-      type: Array
+      type: Array,
     },
     occasions: {
-      type: Array
+      type: Array,
     },
     instructions: {
-      type: String
+      type: String,
     },
     analyzedInstructions: {
-      type: [
-        {}
-      ]
+      type: [{}],
     },
     sourceName: {
-      type: {}
+      type: {},
     },
     creditsText: {
-      type: {}
+      type: {},
     },
     originalId: {
-      type: {}
-    }
-  }
+      type: {},
+    },
+  },
 });
 
 const Recipes = mongoose.model('recipe', recipeSchema);
@@ -135,25 +133,29 @@ const Recipes = mongoose.model('recipe', recipeSchema);
 const savedRecipeSchema = new Schema({
   userId: {
     type: String,
-    required: true
+    required: true,
   },
-  recipes: [{
-    recipeId: {
-      type: Schema.Types.ObjectId,
-      ref: 'recipe'
-    },
-    cooked: {
-      type: Boolean,
-      default: false
-    },
-    notes: [{
-      date: {
-        type: Date,
-        default: Date.now
+  recipes: [
+    {
+      recipeId: {
+        type: Schema.Types.ObjectId,
+        ref: 'recipe',
       },
-      note: String
-    }]
-  }]
+      cooked: {
+        type: Boolean,
+        default: false,
+      },
+      notes: [
+        {
+          date: {
+            type: Date,
+            default: Date.now,
+          },
+          note: String,
+        },
+      ],
+    },
+  ],
 });
 
 const SavedRecipes = mongoose.model('savedRecipe', savedRecipeSchema);
@@ -161,4 +163,4 @@ const SavedRecipes = mongoose.model('savedRecipe', savedRecipeSchema);
 module.exports = {
   Recipes,
   SavedRecipes,
-}
+};

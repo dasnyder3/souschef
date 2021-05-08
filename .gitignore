@@ -5,6 +5,7 @@
 
 keys.js
 .DS_Store
+default.json
 
 # User-specific files
 *.rsuser

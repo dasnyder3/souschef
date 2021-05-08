@@ -1,5 +1,7 @@
 const { Pool } = require('pg');
-const { PG_URI } = require('../keys');
+const config = require('config');
+// const { PG_URI } = require('../keys');
+const PG_URI = config.get('PG_URI');
 
 // create a new pool here using the connection string above
 const pool = new Pool({
