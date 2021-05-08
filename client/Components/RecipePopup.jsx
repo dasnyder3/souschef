@@ -96,10 +96,10 @@ const RecipePopup = ({
         <Container>{ingredients}</Container>
         <h3>Directions:</h3>
         <Container>{directions}</Container>
-        <Form>
+        {/* <Form>
           <Form.Control type='text' value={comment} onChange={changeComment} />
           <Button onClick={submitComment}>Submit</Button>
-        </Form>
+        </Form> */}
       </Modal.Body>
       <Modal.Footer>
         <Container>
