@@ -60,7 +60,14 @@ passport.deserializeUser(function (user, done) {
     .then((data) => {
       done(null, data.rows[0]);
     })
-    .catch((err) => new Error(err));
+    .catch((err) =>
+      next({
+        log: `passport.deserializeUser: ERROR: ${err}`,
+        message: {
+          err: 'ERROR: Check server logs for details',
+        },
+      })
+    );
 });
 
 // require routers
