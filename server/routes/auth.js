@@ -14,7 +14,9 @@ router.get(
     failureRedirect: '/login',
   }),
   (req, res) => {
+    console.log('here in final callback middleware');
     req.logIn(req.user, (err) => {
+      console.log('in login');
       if (err)
         return next({
           log: `auth callback: ERROR: ${err}`,
