@@ -30,6 +30,7 @@ module.exports = {
           profile.photos[0].value,
           profile.emails[0].value,
         ];
+        console.log('profile: ', profile);
         user = await db
           .query(createUser, createUserParams)
           .then((data) => data.rows[0])
