@@ -10,6 +10,10 @@ router.get(
 
 router.get(
   '/google/callback',
+  (req, res, next) => {
+    console.log('in callback');
+    return next();
+  },
   passport.authenticate('google', {
     failureRedirect: '/login',
   }),
