@@ -108,4 +108,4 @@ app.use((err, req, res, next) => {
   res.status(errorObj.status).send(errorObj.message);
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
