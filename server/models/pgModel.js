@@ -1,7 +1,12 @@
 const { Pool } = require('pg');
 const config = require('config');
-// const { PG_URI } = require('../keys');
-const PG_URI = config.get('PG_URI');
+
+let PG_URI;
+if (config.util.getEnv('NODE_ENV') === 'production') {
+  PG_URI = config.util.getEnv('PG_URI');
+} else {
+  PG_URI = config.get('PG_URI');
+}
 
 // create a new pool here using the connection string above
 const pool = new Pool({

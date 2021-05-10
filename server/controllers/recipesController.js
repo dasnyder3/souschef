@@ -2,7 +2,13 @@ const axios = require('axios').default;
 const models = require('../models/models');
 const db = require('../models/pgModel');
 const config = require('config');
-const FOOD_API_KEY = config.get('FOOD_API_KEY');
+
+let FOOD_API_KEY;
+if (config.util.getEnv('NODE_ENV') === 'production') {
+  FOOD_API_KEY = config.util.getEnv('FOOD_API_KEY');
+} else {
+  FOOD_API_KEY = config.get('FOOD_API_KEY');
+}
 
 const recipesController = {};
 

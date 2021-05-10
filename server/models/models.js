@@ -1,7 +1,12 @@
 const mongoose = require('mongoose');
 const config = require('config');
 
-const MONGO_URI = config.get('MONGO_URI');
+let MONGO_URI;
+if (config.util.getEnv('NODE_ENV') === 'production') {
+  MONGO_URI = config.util.getEnv('MONGO_URI');
+} else {
+  MONGO_URI = config.get('MONGO_URI');
+}
 
 mongoose
   .connect(MONGO_URI, {

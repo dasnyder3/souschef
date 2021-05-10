@@ -5,17 +5,26 @@ const app = express();
 const session = require('express-session');
 const db = require('./models/pgModel');
 const config = require('config');
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET } = config.get(
-  'googleOAuth'
-);
-
-// google oauth
 const passport = require('passport');
 const {
   findOrCreateUser,
   checkUserLoggedIn,
   checkUserNotLoggedIn,
 } = require('./controllers/authController');
+
+let GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET;
+if (config.util.getEnv('NODE_ENV') === 'production') {
+  GOOGLE_CLIENT_ID = config.util.getEnv('GOOGLE_CLIENT_ID');
+  GOOGLE_CLIENT_SECRET = config.util.getEnv('GOOGLE_CLIENT_SECRET');
+  SESSION_SECRET = config.util.getEnv('SESSION_SECRET');
+} else {
+  const oAuth = config.get('googleOAuth');
+  GOOGLE_CLIENT_ID = oAuth.GOOGLE_CLIENT_ID;
+  GOOGLE_CLIENT_SECRET = oAuth.GOOGLE_CLIENT_SECRET;
+  SESSION_SECRET = oAuth.SESSION_SECRET;
+}
+
+// google oauth
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(
