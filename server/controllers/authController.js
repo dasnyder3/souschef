@@ -7,9 +7,14 @@ module.exports = {
     let user = await db
       .query(findUser, params)
       .then((data) => data.rows[0])
-      .catch((err) => {
-        throw new Error(err);
-      });
+      .catch((err) =>
+        next({
+          log: `findOrCreateUser: ERROR: ${err}`,
+          message: {
+            err: 'ERROR: Check server logs for details',
+          },
+        })
+      );
     if (!user) {
       const createUser = `
           INSERT INTO users (google_id, display_name, given_name, family_name, picture, email)
@@ -27,9 +32,14 @@ module.exports = {
       user = await db
         .query(createUser, createUserParams)
         .then((data) => data.rows[0])
-        .catch((err) => {
-          throw new Error(err);
-        });
+        .catch((err) =>
+          next({
+            log: `findOrCreateUser: ERROR: ${err}`,
+            message: {
+              err: 'ERROR: Check server logs for details',
+            },
+          })
+        );
     } else {
       const updateUser = `
           UPDATE users
