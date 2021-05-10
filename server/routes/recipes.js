@@ -1,5 +1,4 @@
 const express = require('express');
-const { NamedModulesPlugin } = require('webpack');
 
 const recipesController = require('../controllers/recipesController');
 const { checkUserLoggedIn } = require('../controllers/authController');
