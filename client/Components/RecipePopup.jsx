@@ -39,7 +39,7 @@ const RecipePopup = ({
     };
     fetch('/recipes/comment', requestOptions)
       .then((res) => res.json())
-      .then((data) => console.log(data));
+      .catch((err) => console.log(err));
     updateComment('');
   };
 

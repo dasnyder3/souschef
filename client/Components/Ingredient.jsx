@@ -6,7 +6,7 @@ const Ingredient = ({ amount, unit, originalName, scaler }) => {
   return (
     <div>
       <Row>
-        <Col>{scaler * amount}</Col> <Col xs={3}>{unit}</Col>
+        <Col>{(scaler * amount).toFixed(2)}</Col> <Col xs={3}>{unit}</Col>
         <Col xs={8}>{originalName}</Col>
       </Row>
       <hr />

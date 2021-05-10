@@ -13,9 +13,7 @@ const App = () => {
     fetch('auth/user')
       .then((res) => res.json())
       .then((data) => updateUser(data.user));
-    // console.log(user);
   }, []);
-  useEffect(() => console.log(user), [user]);
   return (
     <Router>
       <Navigation user={user} />

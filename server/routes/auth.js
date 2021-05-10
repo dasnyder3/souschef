@@ -10,18 +10,12 @@ router.get(
 
 router.get(
   '/google/callback',
-  (req, res, next) => {
-    console.log('in callback');
-    return next();
-  },
   passport.authenticate('google', {
     failureRedirect: '/failedlogin',
     failureFlash: 'Invalid Google credentials',
   }),
   (req, res) => {
-    console.log('here in final callback middleware');
     req.logIn(req.user, (err) => {
-      console.log('in login');
       if (err)
         return next({
           log: `auth callback: ERROR: ${err}`,

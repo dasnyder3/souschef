@@ -122,7 +122,6 @@ class MainContainer extends Component {
 
   render() {
     const { user } = this.props;
-    console.log(user);
     return (
       <Container fluid>
         <Container style={{ padding: '5px' }} fluid>
