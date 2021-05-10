@@ -6,25 +6,27 @@ const session = require('express-session');
 const db = require('./models/pgModel');
 const config = require('config');
 const passport = require('passport');
+const MongoStore = require('connect-mongo');
 const {
   findOrCreateUser,
   checkUserLoggedIn,
   checkUserNotLoggedIn,
 } = require('./controllers/authController');
 
-let GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET, CALLBACK;
+let GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET, CALLBACK, MONGO_URI;
 if (process.env.NODE_ENV === 'production') {
   GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID; //config.util.getEnv('GOOGLE_CLIENT_ID');
   GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET; //config.util.getEnv('GOOGLE_CLIENT_SECRET');
   SESSION_SECRET = process.env.SESSION_SECRET; //config.util.getEnv('SESSION_SECRET');
   CALLBACK = 'https://sous-chef-recipe-app.herokuapp.com/auth/google/callback';
+  MONGO_URI = process.env.MONGO_URI;
 } else {
   const oAuth = config.get('googleOAuth');
-  // console.log(process.env.NODE_ENV);
   GOOGLE_CLIENT_ID = oAuth.GOOGLE_CLIENT_ID;
   GOOGLE_CLIENT_SECRET = oAuth.GOOGLE_CLIENT_SECRET;
   SESSION_SECRET = oAuth.SESSION_SECRET;
   CALLBACK = 'http://localhost:8080/auth/google/callback';
+  MONGO_URI = config.get('MONGO_URI');
 }
 
 // google oauth
@@ -74,6 +76,9 @@ app.use(
     secret: SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: MONGO_URI,
+    }),
   })
 );
 app.use(passport.initialize());
