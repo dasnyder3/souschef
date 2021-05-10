@@ -3,9 +3,9 @@ const config = require('config');
 
 let MONGO_URI;
 if (config.util.getEnv('NODE_ENV') === 'production') {
-  MONGO_URI = config.util.getEnv('MONGO_URI');
+  MONGO_URI = process.env.MONGO_URI;
 } else {
-  MONGO_URI = process.env.MONGO_URI; //config.get('MONGO_URI');
+  MONGO_URI = config.get('MONGO_URI');
 }
 
 mongoose

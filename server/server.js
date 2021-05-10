@@ -14,14 +14,15 @@ const {
 
 let GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET;
 if (config.util.getEnv('NODE_ENV') === 'production') {
-  GOOGLE_CLIENT_ID = config.util.getEnv('GOOGLE_CLIENT_ID');
-  GOOGLE_CLIENT_SECRET = config.util.getEnv('GOOGLE_CLIENT_SECRET');
-  SESSION_SECRET = config.util.getEnv('SESSION_SECRET');
+  GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID; //config.util.getEnv('GOOGLE_CLIENT_ID');
+  GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET; //config.util.getEnv('GOOGLE_CLIENT_SECRET');
+  SESSION_SECRET = process.env.SESSION_SECRET; //config.util.getEnv('SESSION_SECRET');
 } else {
-  // const oAuth = config.get('googleOAuth');
-  GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID; //oAuth.GOOGLE_CLIENT_ID;
-  GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET; //oAuth.GOOGLE_CLIENT_SECRET;
-  SESSION_SECRET = process.env.SESSION_SECRET; //oAuth.SESSION_SECRET;
+  const oAuth = config.get('googleOAuth');
+  // console.log(process.env.NODE_ENV);
+  GOOGLE_CLIENT_ID = oAuth.GOOGLE_CLIENT_ID;
+  GOOGLE_CLIENT_SECRET = oAuth.GOOGLE_CLIENT_SECRET;
+  SESSION_SECRET = oAuth.SESSION_SECRET;
 }
 
 // google oauth
