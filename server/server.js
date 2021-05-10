@@ -13,7 +13,7 @@ const {
 } = require('./controllers/authController');
 
 let GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET;
-if (config.util.getEnv('NODE_ENV') === 'production') {
+if (process.env.NODE_ENV === 'production') {
   GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID; //config.util.getEnv('GOOGLE_CLIENT_ID');
   GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET; //config.util.getEnv('GOOGLE_CLIENT_SECRET');
   SESSION_SECRET = process.env.SESSION_SECRET; //config.util.getEnv('SESSION_SECRET');

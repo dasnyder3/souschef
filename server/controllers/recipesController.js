@@ -4,8 +4,8 @@ const db = require('../models/pgModel');
 const config = require('config');
 
 let FOOD_API_KEY;
-if (config.util.getEnv('NODE_ENV') === 'production') {
-  FOOD_API_KEY = process.env.FOOD_API_KEY //config.util.getEnv('FOOD_API_KEY');
+if (process.env.NODE_ENV === 'production') {
+  FOOD_API_KEY = process.env.FOOD_API_KEY; //config.util.getEnv('FOOD_API_KEY');
 } else {
   FOOD_API_KEY = config.get('FOOD_API_KEY');
 }

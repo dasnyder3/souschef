@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 const config = require('config');
 
 let PG_URI;
-if (config.util.getEnv('NODE_ENV') === 'production') {
+if (process.env.NODE_ENV === 'production') {
   PG_URI = process.env.PG_URI;
 } else {
   PG_URI = config.get('PG_URI');
