@@ -129,9 +129,7 @@ recipesController.addRecipeToPostgres = async (req, res, next) => {
         VALUES ($1)
         RETURNING *
         `;
-      console.log(params);
       const insertedData = await db.query(insertQuery, params);
-      console.log(insertedData);
       res.locals.postgresRecipeId = insertedData.rows[0]._id;
     }
     return next();
@@ -157,9 +155,7 @@ recipesController.saveUserRecipe = async (req, res, next) => {
       req.user._id,
       res.locals.postgresRecipeId,
     ]);
-    // console.log(savedRecipe);
     if (!savedRecipe.rows.length) {
-      console.log('inserting data');
       const queryString = `
         INSERT INTO user_recipes (user_id, recipe_id, cooked)
         VALUES ($1, $2, $3)

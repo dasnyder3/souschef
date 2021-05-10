@@ -2,21 +2,16 @@ const db = require('../models/pgModel');
 
 module.exports = {
   findOrCreateUser: async function (profile) {
-    console.log('profile: ', profile);
-    const findUser = 'SELECT * FROM users WHERE google_id = $1';
-    const params = [profile.id];
-    let user = await db
-      .query(findUser, params)
-      .then((data) => data.rows[0])
-      .catch((err) =>
-        next({
-          log: `findOrCreateUser: ERROR: ${err}`,
-          message: {
-            err: 'ERROR: Check server logs for details',
-          },
-        })
-      );
     try {
+      const findUser = 'SELECT * FROM users WHERE google_id = $1';
+      const params = [profile.id];
+      let user = await db
+        .query(findUser, params)
+        .then((data) => data.rows[0])
+        .catch((err) => {
+          console.log(`error in FindOrCreateUser: ${err}`);
+          throw new Error(err);
+        });
       if (!user) {
         const createUser = `
             INSERT INTO users (google_id, display_name, given_name, family_name, picture, email)
@@ -34,14 +29,10 @@ module.exports = {
         user = await db
           .query(createUser, createUserParams)
           .then((data) => data.rows[0])
-          .catch((err) =>
-            next({
-              log: `findOrCreateUser: ERROR: ${err}`,
-              message: {
-                err: 'ERROR: Check server logs for details',
-              },
-            })
-          );
+          .catch((err) => {
+            console.log(`error in FindOrCreateUser: ${err}`);
+            throw new Error(err);
+          });
       } else {
         const updateUser = `
             UPDATE users
@@ -60,22 +51,14 @@ module.exports = {
         user = await db
           .query(updateUser, updateUserParams)
           .then((data) => data.rows[0])
-          .catch((err) =>
-            next({
-              log: `findOrCreateUser: ERROR: ${err}`,
-              message: {
-                err: 'ERROR: Check server logs for details',
-              },
-            })
-          );
+          .catch((err) => {
+            console.log(`error in FindOrCreateUser: ${err}`);
+            throw new Error(err);
+          });
       }
     } catch (err) {
-      return next({
-        log: `findOrCreateUser: ERROR: ${err}`,
-        message: {
-          err: 'ERROR: Check server logs for details',
-        },
-      });
+      console.log(`error in FindOrCreateUser: ${err}`);
+      throw new Error(err);
     }
   },
   checkUserLoggedIn: (req, res, next) => {
