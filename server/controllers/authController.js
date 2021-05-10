@@ -2,6 +2,7 @@ const db = require('../models/pgModel');
 
 module.exports = {
   findOrCreateUser: async function (profile) {
+    console.log('profile: ', profile);
     const findUser = 'SELECT * FROM users WHERE google_id = $1';
     const params = [profile.id];
     let user = await db
@@ -30,7 +31,7 @@ module.exports = {
           profile.photos[0].value,
           profile.emails[0].value,
         ];
-        console.log('profile: ', profile);
+
         user = await db
           .query(createUser, createUserParams)
           .then((data) => data.rows[0])
