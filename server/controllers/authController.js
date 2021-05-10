@@ -48,9 +48,14 @@ module.exports = {
       user = await db
         .query(updateUser, updateUserParams)
         .then((data) => data.rows[0])
-        .catch((err) => {
-          throw new Error(err);
-        });
+        .catch((err) =>
+          next({
+            log: `findOrCreateUser: ERROR: ${err}`,
+            message: {
+              err: 'ERROR: Check server logs for details',
+            },
+          })
+        );
     }
   },
   checkUserLoggedIn: (req, res, next) => {

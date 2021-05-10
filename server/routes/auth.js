@@ -15,7 +15,13 @@ router.get(
   }),
   (req, res) => {
     req.logIn(req.user, (err) => {
-      if (err) return next(err);
+      if (err)
+        return next({
+          log: `auth callback: ERROR: ${err}`,
+          message: {
+            err: 'ERROR: Check server logs for details',
+          },
+        });
       res.redirect('/');
     });
   }
