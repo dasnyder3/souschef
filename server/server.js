@@ -85,9 +85,9 @@ app.use('/build', express.static(path.join(__dirname, '../build')));
 
 app.use('/recipes', recipesRouter);
 
-// app.get('/login', checkUserNotLoggedIn, (req, res) => {
-//   return res.status(200).sendFile(path.join(__dirname, '../index.html'));
-// });
+app.get('/login', checkUserNotLoggedIn, (req, res) => {
+  return res.status(200).sendFile(path.join(__dirname, '../index.html'));
+});
 
 app.get('/logout', (req, res) => {
   req.logout();

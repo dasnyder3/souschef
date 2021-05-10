@@ -15,7 +15,7 @@ router.get(
     return next();
   },
   passport.authenticate('google', {
-    failureRedirect: '/login',
+    failureRedirect: '/failedlogin',
     failureFlash: 'Invalid Google credentials',
   }),
   (req, res) => {
