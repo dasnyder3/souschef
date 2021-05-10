@@ -12,17 +12,19 @@ const {
   checkUserNotLoggedIn,
 } = require('./controllers/authController');
 
-let GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET;
+let GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET, CALLBACK;
 if (process.env.NODE_ENV === 'production') {
   GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID; //config.util.getEnv('GOOGLE_CLIENT_ID');
   GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET; //config.util.getEnv('GOOGLE_CLIENT_SECRET');
   SESSION_SECRET = process.env.SESSION_SECRET; //config.util.getEnv('SESSION_SECRET');
+  CALLBACK = 'https://sous-chef-recipe-app.herokuapp.com/auth/google/callback';
 } else {
   const oAuth = config.get('googleOAuth');
   // console.log(process.env.NODE_ENV);
   GOOGLE_CLIENT_ID = oAuth.GOOGLE_CLIENT_ID;
   GOOGLE_CLIENT_SECRET = oAuth.GOOGLE_CLIENT_SECRET;
   SESSION_SECRET = oAuth.SESSION_SECRET;
+  CALLBACK = 'http://localhost:8080/auth/google/callback';
 }
 
 // google oauth
@@ -33,7 +35,7 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:8080/auth/google/callback',
+      callbackURL: CALLBACK,
       passReqToCallback: true,
     },
     function (req, accessToken, refreshToken, profile, done) {
