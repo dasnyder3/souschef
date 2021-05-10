@@ -5,7 +5,7 @@ let PG_URI;
 if (config.util.getEnv('NODE_ENV') === 'production') {
   PG_URI = config.util.getEnv('PG_URI');
 } else {
-  PG_URI = config.get('PG_URI');
+  PG_URI = process.env.PG_URI; //config.get('PG_URI');
 }
 
 // create a new pool here using the connection string above
