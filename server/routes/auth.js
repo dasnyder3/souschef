@@ -16,6 +16,7 @@ router.get(
   },
   passport.authenticate('google', {
     failureRedirect: '/login',
+    failureFlash: 'Invalid Google credentials',
   }),
   (req, res) => {
     console.log('here in final callback middleware');
