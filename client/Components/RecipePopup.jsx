@@ -88,7 +88,7 @@ const RecipePopup = ({
           <Form.Control
             type='text'
             defaultValue={recipe.servings}
-            onChange={(e) => updateScaler(e.target.value, recipe.servings)}
+            onChange={(e) => setScaler(e.target.value, recipe.servings)}
             style={{ width: '50px' }}
           ></Form.Control>
         </Form.Row>
