@@ -8,8 +8,8 @@ const Ingredient = ({ amount, unit, originalName, scaler }) => {
     <div>
       <Row>
         <Col>
-          {(amount * scaler).toFixed(2)}
-          {/* <Quantity numerator={1} denominator={3} /> */}
+          {/* {(amount * scaler).toFixed(2)} */}
+          <Quantity amount={amount} scaler={scaler} />
         </Col>
         <Col xs={3}>{unit}</Col>
         <Col xs={8}>{originalName}</Col>

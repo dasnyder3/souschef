@@ -41,7 +41,6 @@ passport.use(
       passReqToCallback: true,
     },
     function (req, accessToken, refreshToken, profile, done) {
-      console.log('profile: ', profile);
       findOrCreateUser(profile);
       return done(null, profile.id);
     }
